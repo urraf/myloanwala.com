@@ -1,0 +1,122 @@
+@import "tailwindcss";
+
+/* Brand palette — modelled on the Paisabazaar look */
+@theme {
+  --font-sans: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-roboto-serif), Georgia, serif;
+  --color-brand: #0066ff;
+  --color-brand-dark: #1b1dc7;
+  --color-navy: #052f5f;
+  --color-ink: #1c1d1f;
+  --color-body: #45484d;
+  --color-muted: #8a8d93;
+  --color-line: #e4e4e3;
+  --color-soft: #f2f7ff;
+  --color-soft-2: #d9e8ff;
+  --color-accent: #ffc542;
+  --color-success: #12a150;
+  --color-tile: #f2f7ff;
+  --color-footer: #1c1d2e;
+  --color-pink: #d6246e;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+@utility container-x {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60;
+}
+@utility btn-primary {
+  @apply btn bg-brand text-white hover:bg-brand-dark;
+}
+@utility btn-outline {
+  @apply btn border border-brand text-brand hover:bg-soft;
+}
+@utility btn-accent {
+  @apply btn bg-accent text-ink hover:brightness-95;
+}
+@utility input {
+  @apply w-full rounded-lg border border-line bg-white px-3.5 py-2.5 text-sm text-ink outline-none transition placeholder:text-muted focus:border-brand focus:ring-2 focus:ring-brand/15;
+}
+@utility label {
+  @apply mb-1.5 block text-xs font-medium text-body;
+}
+@utility card {
+  @apply rounded-2xl border border-line bg-white;
+}
+@utility section-title {
+  @apply font-serif text-2xl font-semibold text-ink sm:text-[28px];
+}
+
+/* Blog / markdown article styling */
+.prose-blog {
+  color: var(--color-body);
+  line-height: 1.8;
+  font-size: 1rem;
+}
+.prose-blog h2 { font-size: 1.5rem; font-weight: 600; color: var(--color-ink); margin: 2rem 0 0.75rem; }
+.prose-blog h3 { font-size: 1.2rem; font-weight: 600; color: var(--color-ink); margin: 1.5rem 0 0.5rem; }
+.prose-blog p { margin: 0 0 1rem; }
+.prose-blog ul, .prose-blog ol { margin: 0 0 1rem 1.25rem; }
+.prose-blog ul { list-style: disc; }
+.prose-blog ol { list-style: decimal; }
+.prose-blog li { margin: 0.3rem 0; }
+.prose-blog a { color: var(--color-brand); text-decoration: underline; }
+.prose-blog strong { color: var(--color-ink); }
+.prose-blog blockquote { border-left: 4px solid var(--color-brand); background: var(--color-soft); padding: 0.75rem 1rem; margin: 1rem 0; border-radius: 0 8px 8px 0; }
+.prose-blog table { width: 100%; border-collapse: collapse; margin: 1rem 0 1.5rem; font-size: 0.9rem; display: block; overflow-x: auto; }
+.prose-blog th { background: var(--color-soft); color: var(--color-ink); font-weight: 600; text-align: left; }
+.prose-blog th, .prose-blog td { border: 1px solid var(--color-line); padding: 0.6rem 0.8rem; }
+.prose-blog img { border-radius: 12px; margin: 1rem 0; }
+.prose-blog code { background: var(--color-soft); padding: 0.1rem 0.35rem; border-radius: 4px; font-size: 0.9em; }
+
+/* Range slider (EMI calculator) */
+input[type="range"].range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--color-soft-2);
+  outline: none;
+}
+input[type="range"].range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  border: 3px solid #fff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+  cursor: pointer;
+}
+input[type="range"].range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  border: 3px solid #fff;
+  cursor: pointer;
+}
+
+/* Chat assistant message formatting */
+.prose-chat p { margin: 0 0 0.5rem; }
+.prose-chat p:last-child { margin-bottom: 0; }
+.prose-chat ul, .prose-chat ol { margin: 0.25rem 0 0.5rem 1.1rem; }
+.prose-chat ul { list-style: disc; }
+.prose-chat ol { list-style: decimal; }
+.prose-chat li { margin: 0.15rem 0; }
+.prose-chat a { color: var(--color-brand); text-decoration: underline; word-break: break-all; }
+.prose-chat strong { font-weight: 600; }
+.prose-chat table { font-size: 0.75rem; border-collapse: collapse; margin: 0.4rem 0; display: block; overflow-x: auto; }
+.prose-chat th, .prose-chat td { border: 1px solid var(--color-line); padding: 0.25rem 0.4rem; }
