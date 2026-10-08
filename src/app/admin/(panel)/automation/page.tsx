@@ -36,8 +36,15 @@ export default async function AutomationPage() {
                 <span className="block text-xs text-body">A new post is written and published on the schedule below.</span>
               </span>
             </label>
+            <label className="flex items-center gap-3 rounded-xl border border-line p-4">
+              <input type="checkbox" name="autoPublish" defaultChecked={s.autoPublish !== false} className="h-5 w-5 accent-brand" />
+              <span>
+                <span className="block font-medium">Publish automatically</span>
+                <span className="block text-xs text-body">Turn off to save AI posts as <b>drafts</b> — review them in Blogs and publish with one click.</span>
+              </span>
+            </label>
             <div className="max-w-xs">
-              <label className="label">Publish a new post every</label>
+              <label className="label">Write a new post every</label>
               <div className="flex items-center gap-2">
                 <input name="intervalHours" type="number" min={1} max={168} defaultValue={s.intervalHours} className="input" />
                 <span className="text-sm text-body">hour(s)</span>

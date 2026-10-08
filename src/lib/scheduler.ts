@@ -27,8 +27,8 @@ async function tick() {
     );
     if (!claimed) return;
 
-    const blog = await generateBlogPost();
-    await Settings.updateOne({ key: "main" }, { lastStatus: `✅ Published "${blog.title}"` });
+    const blog = await generateBlogPost({ publish: settings.autoPublish !== false });
+    await Settings.updateOne({ key: "main" }, { lastStatus: `✅ ${blog.published ? "Published" : "Saved as draft"}: "${blog.title}"` });
     console.log(`[blog-scheduler] published: ${blog.title}`);
   } catch (e) {
     const msg = (e as Error).message;

@@ -4,12 +4,13 @@ import StatusBadge from "@/components/StatusBadge";
 import { Blog, Lead, Partner, getSettings } from "@/lib/models";
 import { formatINR } from "@/lib/site";
 import { requireAdmin } from "@/lib/auth";
+import { removeDemoData } from "@/lib/actions/admin";
 
 export default async function AdminDashboard() {
   await requireAdmin();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const [totalLeads, todayLeads, newLeads, pendingPartners, partners, blogs, settings, recent] = await Promise.all([
+  const [totalLeads, todayLeads, newLeads, pendingPartners, partners, blogs, settings, recent, demoCount] = await Promise.all([
     Lead.countDocuments(),
     Lead.countDocuments({ createdAt: { $gte: today } }),
     Lead.countDocuments({ status: "new" }),
@@ -18,6 +19,7 @@ export default async function AdminDashboard() {
     Blog.countDocuments(),
     getSettings(),
     Lead.find().sort({ createdAt: -1 }).limit(8).lean(),
+    Promise.all([Lead.countDocuments({ demo: true }), Partner.countDocuments({ demo: true })]).then(([a, b]) => a + b),
   ]);
 
   const cards = [
@@ -43,6 +45,13 @@ export default async function AdminDashboard() {
           </Link>
         ))}
       </div>
+
+      {demoCount > 0 && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+          <span><b>{demoCount}</b> sample leads/partners are shown so the dashboard looks complete. Remove them before real use.</span>
+          <form action={removeDemoData}><button className="btn-outline bg-white px-3 py-1.5 text-xs">Remove demo data</button></form>
+        </div>
+      )}
 
       {pendingPartners > 0 && (
         <Link href="/admin/partners" className="flex items-center justify-between rounded-xl bg-amber-50 p-4 text-sm text-amber-800">

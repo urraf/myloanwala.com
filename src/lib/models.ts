@@ -35,6 +35,7 @@ const partnerSchema = new Schema(
     city: { type: String, default: "" },
     passwordHash: { type: String, required: true },
     status: { type: String, enum: PARTNER_STATUS, default: "pending" },
+    demo: { type: Boolean, default: false }, // sample data — removable from the dashboard
   },
   { timestamps: true }
 );
@@ -61,6 +62,7 @@ const leadSchema = new Schema(
     createdBy: { type: Schema.Types.ObjectId, ref: "Partner" },
     // Partner (NBFC / DSA) this lead is assigned to by admin
     assignedTo: { type: Schema.Types.ObjectId, ref: "Partner" },
+    demo: { type: Boolean, default: false }, // sample data — removable from the dashboard
   },
   { timestamps: true }
 );
@@ -110,6 +112,7 @@ const settingsSchema = new Schema(
   {
     key: { type: String, default: "main", unique: true },
     autoBlogEnabled: { type: Boolean, default: false },
+    autoPublish: { type: Boolean, default: true }, // false = AI posts are saved as drafts for review
     intervalHours: { type: Number, default: 1 },
     topics: { type: [String], default: [] },
     lastRunAt: Date,

@@ -86,17 +86,36 @@ export async function adminResetWithOtp(_: FormState, fd: FormData): Promise<For
   return { ok: true, message: "Password updated successfully. You can now log in with your new password." };
 }
 
+export async function adminChangeEmail(_: FormState, fd: FormData): Promise<FormState> {
+  const me = await requireAdmin();
+  const admin = await Admin.findById(me._id);
+  if (!admin || !(await checkPassword(str(fd, "current"), admin.passwordHash))) return { error: "Current password is incorrect" };
+  const email = str(fd, "email").toLowerCase();
+  if (!/^\S+@\S+\.\S+$/.test(email)) return { error: "Enter a valid email address" };
+  if (await Admin.exists({ email, _id: { $ne: admin._id } })) return { error: "This email is already in use" };
+  admin.email = email;
+  await admin.save();
+  revalidatePath("/admin", "layout");
+  return { ok: true, message: `Login email changed to ${email}. Use it next time you log in.` };
+}
+
 export async function adminChangePassword(_: FormState, fd: FormData): Promise<FormState> {
   const me = await requireAdmin();
   const admin = await Admin.findById(me._id);
   if (!admin || !(await checkPassword(str(fd, "current"), admin.passwordHash))) return { error: "Current password is incorrect" };
   const password = str(fd, "password");
   if (password.length < 8) return { error: "New password must be at least 8 characters" };
+  if (password !== str(fd, "confirm")) return { error: "New passwords do not match" };
   admin.passwordHash = await hashPassword(password);
-  const email = str(fd, "email").toLowerCase();
-  if (email && /^\S+@\S+\.\S+$/.test(email)) admin.email = email;
   await admin.save();
-  return { ok: true, message: "Account updated" };
+  return { ok: true, message: "Password changed successfully." };
+}
+
+/** Deletes the sample leads & partners added for the demo (marked demo: true). */
+export async function removeDemoData() {
+  await requireAdmin();
+  await Promise.all([Lead.deleteMany({ demo: true }), Partner.deleteMany({ demo: true })]);
+  revalidatePath("/admin", "layout");
 }
 
 /* =============== Leads =============== */
@@ -326,6 +345,7 @@ export async function saveAutomation(_: FormState, fd: FormData): Promise<FormSt
     { key: "main" },
     {
       autoBlogEnabled: fd.get("autoBlogEnabled") === "on",
+      autoPublish: fd.get("autoPublish") === "on",
       intervalHours: Math.min(168, Math.max(1, Number(fd.get("intervalHours")) || 1)),
       topics,
     }

@@ -28,6 +28,14 @@ Brand colours live in `src/app/globals.css` (`--color-brand`, `--color-navy`, �
 Every new lead (website form, AI chat, partner) and every new partner registration is emailed to
 `LEAD_NOTIFY_EMAIL` (or `ADMIN_EMAIL`) once SMTP is configured.
 
+## Fill a new database (`npm run seed`)
+
+`npm run seed` adds everything a fresh database needs so the site looks complete: the admin account
+(from `ADMIN_EMAIL` / `ADMIN_PASSWORD`), settings, 18 lender offers, 8 starter articles, and **demo** leads & partners
+(demo partner login password: `Partner@123`). `npm run seed -- --ai` also writes 6 extra articles with AI.
+It is safe to run again — it only adds what's missing. Remove the demo leads/partners any time from
+**Admin → Dashboard → Remove demo data**.
+
 ## Run locally
 
 ```bash
@@ -73,7 +81,8 @@ sudo npm i -g pm2
 # 2. Upload the project (git clone or upload the folder), then:
 cd myloanwala
 npm ci
-nano .env            # paste values from .env.example
+nano .env.production # paste your production settings (see .env.example)
+npm run seed         # only for a brand-new database
 npm run build
 pm2 start ecosystem.config.js
 pm2 save && pm2 startup   # auto-start after reboot
