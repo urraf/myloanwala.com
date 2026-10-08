@@ -16,7 +16,6 @@ export default async function AutomationPage() {
   await requireAdmin();
   const s = await getSettings();
   const hasGroq = !!process.env.GROQ_API_KEY;
-  const hasPexels = !!process.env.PEXELS_API_KEY;
 
   return (
     <div className="space-y-6">
@@ -62,12 +61,11 @@ export default async function AutomationPage() {
             <h2 className="font-semibold">Status</h2>
             <ul className="mt-3 space-y-2">
               <Check ok={hasGroq} label="Groq API key configured" />
-              <Check ok={hasPexels} label="Pexels API key (images)" />
+              <Check ok label={process.env.PEXELS_API_KEY ? "Images: Pexels + free photo library" : "Images: free photo library (no key needed)"} />
               <Check ok={s.autoBlogEnabled} label={s.autoBlogEnabled ? `Running every ${s.intervalHours}h` : "Automation is off"} />
             </ul>
             <p className="mt-4 text-xs text-muted">Last run: {s.lastRunAt ? new Date(s.lastRunAt).toLocaleString("en-IN") : "never"}</p>
             {s.lastStatus && <p className="mt-1 break-words text-xs text-body">{s.lastStatus}</p>}
-            {!hasPexels && <p className="mt-3 rounded-lg bg-amber-50 p-2 text-xs text-amber-800">Without a Pexels key, posts get a branded gradient cover instead of a photo.</p>}
           </div>
 
           <div className="card p-5">

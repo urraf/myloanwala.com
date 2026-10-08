@@ -2,6 +2,9 @@ import { connectDB } from "./db";
 import { Blog, getSettings } from "./models";
 import { BLOG_CATEGORIES, SITE, slugify } from "./site";
 import { groqChat } from "./groq";
+import { findImage } from "./images";
+
+export { findImage };
 
 /** Everything the blog editor has — AI fills all of it. */
 export type BlogDraft = {
@@ -68,25 +71,6 @@ function cleanDraft(r: Partial<AIResult>): AIResult {
   };
 }
 
-/** Finds a relevant photo on Pexels (free API key: pexels.com/api). */
-export async function findImage(query: string): Promise<{ url: string; credit: string } | null> {
-  const key = process.env.PEXELS_API_KEY;
-  if (!key) return null;
-  try {
-    const q = encodeURIComponent(query || "finance money india");
-    const res = await fetch(`https://api.pexels.com/v1/search?query=${q}&orientation=landscape&per_page=15`, {
-      headers: { Authorization: key },
-    });
-    if (!res.ok) return null;
-    const { photos } = await res.json();
-    if (!photos?.length) return query === "finance money" ? null : findImage("finance money");
-    const photo = photos[Math.floor(Math.random() * Math.min(photos.length, 8))];
-    return { url: photo.src.large2x || photo.src.large, credit: `Photo by ${photo.photographer} on Pexels` };
-  } catch {
-    return null;
-  }
-}
-
 /** AI writes a complete post (content + all SEO fields + image). Nothing is saved. */
 export async function aiWriteDraft(topic: string, avoidTitles: string[] = []): Promise<BlogDraft> {
   const today = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
@@ -107,8 +91,8 @@ Avoid these titles we already published: ${avoidTitles.slice(0, 30).map((t) => `
 
   const r = cleanDraft(await groqJSON<AIResult>(system, user));
   if (!r.title || !r.content) throw new Error("AI returned an incomplete post. Please try again.");
-  const image = await findImage(r.imageQuery);
-  return { ...r, coverImage: image?.url || "", imageCredit: image?.credit || "" };
+  const image = await findImage(r.imageQuery, r.category);
+  return { ...r, coverImage: image.url, imageCredit: image.credit };
 }
 
 /** For posts written by hand: AI fills slug, keywords, meta title/description, excerpt, category, image alt. */

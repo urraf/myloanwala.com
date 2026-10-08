@@ -312,11 +312,9 @@ export async function aiFillSeo(title: string, content: string): Promise<AIResul
   }
 }
 
-export async function aiFindImage(query: string): Promise<AIResult<{ url: string; credit: string }>> {
+export async function aiFindImage(query: string, category?: string): Promise<AIResult<{ url: string; credit: string }>> {
   await requireAdmin();
-  if (!process.env.PEXELS_API_KEY) return { ok: false, error: "PEXELS_API_KEY is not set in .env" };
-  const img = await findImage(query);
-  return img ? { ok: true, data: img } : { ok: false, error: "No image found — try other words" };
+  return { ok: true, data: await findImage(query, category) };
 }
 
 export async function deleteBlog(fd: FormData) {

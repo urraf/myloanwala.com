@@ -109,7 +109,7 @@ export default function BlogEditor({ blog = {} }: { blog?: BlogFormData }) {
   const findImage = () =>
     run("image", async () => {
       const q = f.tags.split(",")[0]?.trim() || f.title;
-      const r = await aiFindImage(q || "finance india");
+      const r = await aiFindImage(q || "finance", f.category);
       if (!r.ok) return setAiMsg({ type: "error", text: r.error });
       setF((p) => ({ ...p, coverImage: r.data.url, imageCredit: r.data.credit, imageAlt: p.imageAlt || f.title }));
       setPreview(r.data.url);

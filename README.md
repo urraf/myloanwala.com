@@ -2,7 +2,7 @@
 
 Loan comparison website (Paisabazaar-style) with an admin panel, an NBFC/DSA partner dashboard and AI blog automation.
 
-**Stack:** Next.js 16 (frontend + backend in one app) · MongoDB (Mongoose) · Tailwind CSS · Groq AI · Pexels images
+**Stack:** Next.js 16 (frontend + backend in one app) · MongoDB (Mongoose) · Tailwind CSS · Groq AI · free CC0 photos (Openverse)
 
 ## What's inside
 
@@ -49,7 +49,7 @@ The first admin account is created from `ADMIN_EMAIL` / `ADMIN_PASSWORD` the fir
 ## Blogs
 
 **Admin → Blogs → New Post** — write posts yourself or with AI:
-- **Write with AI:** type a topic → AI writes the full article and fills title, slug, keywords, SEO title, meta description, category, image alt and finds a cover photo (Pexels). Review, then Save.
+- **Write with AI:** type a topic → AI writes the full article and fills title, slug, keywords, SEO title, meta description, category, image alt and finds a matching cover photo automatically. Review, then Save.
 - **Write manually:** title, content (Markdown with live preview), summary, category, cover image (upload / URL / auto-find), image alt text.
 - **SEO panel:** live Google search preview, slug, SEO title & meta description with length counters, keywords, an SEO score checklist and **Auto-fill SEO with AI** for hand-written posts.
 - 8 starter articles (with CC0 photos in `public/blog/`) are added automatically the first time the blog is empty. Edit or delete them freely.
@@ -66,7 +66,9 @@ Floating robot button on every public page. Uses Groq (`GROQ_API_KEY`; optional 
 
 The scheduler runs **inside the app** (`src/instrumentation.ts` → `src/lib/scheduler.ts`). It checks every 5 minutes and publishes a new post when the interval set in **Admin → AI Automation** has passed (default: every 1 hour).
 
-- Needs `GROQ_API_KEY` (writes the post — the best available Groq model is chosen automatically, with fallback if one is rate-limited) and `PEXELS_API_KEY` (finds a matching photo; free at pexels.com/api).
+- Needs `GROQ_API_KEY` (writes the post — the best available Groq model is chosen automatically, with fallback if one is rate-limited)  — **no image key needed**: cover photos come from Openverse
+  (free CC0 photos, filtered for relevance and stored in `uploads/` on your server), with built-in category photos as a fallback.
+  `PEXELS_API_KEY` is optional if you ever get one.
 - Turn it on/off, change the interval and topics from **Admin → AI Automation**. There's also a **Generate with AI** button for one-off posts.
 - Keep PM2 at **1 instance**. Running more instances is safe (each run is locked in the database), but it isn't needed.
 
