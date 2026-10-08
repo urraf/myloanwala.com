@@ -1,12 +1,10 @@
 "use server";
 
 import crypto from "node:crypto";
-import fs from "node:fs/promises";
-import path from "node:path";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/db";
-import { Admin, Blog, LEAD_STATUS, Lead, Offer, PARTNER_STATUS, PARTNER_TYPES, Partner, Settings, getSettings } from "@/lib/models";
+import { Admin, Blog, LEAD_STATUS, Lead, Offer, PARTNER_STATUS, PARTNER_TYPES, Partner, Settings, Upload, getSettings } from "@/lib/models";
 import {
   checkPassword, createSession, destroySession, ensureAdminSeeded, hashPassword, requireAdmin,
 } from "@/lib/auth";
@@ -232,16 +230,15 @@ export async function importSampleOffers() {
 
 /* =============== Blogs =============== */
 
-const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 const IMAGE_TYPES: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif" };
 
+/** Stores an uploaded image in MongoDB and returns its public URL (/uploads/<name>). */
 async function saveUpload(file: File) {
   const ext = IMAGE_TYPES[file.type];
   if (!ext) throw new Error("Only JPG, PNG, WEBP or GIF images are allowed");
   if (file.size > 5 * 1024 * 1024) throw new Error("Image must be smaller than 5MB");
-  await fs.mkdir(UPLOAD_DIR, { recursive: true });
   const name = `${Date.now()}-${crypto.randomBytes(4).toString("hex")}.${ext}`;
-  await fs.writeFile(path.join(UPLOAD_DIR, name), Buffer.from(await file.arrayBuffer()));
+  await Upload.create({ name, contentType: file.type, data: Buffer.from(await file.arrayBuffer()) });
   return `/uploads/${name}`;
 }
 

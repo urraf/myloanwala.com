@@ -1,17 +1,16 @@
 import crypto from "node:crypto";
-import fs from "node:fs/promises";
-import path from "node:path";
+import { connectDB } from "./db";
+import { Blog } from "./models";
 
 /**
  * Finds a cover photo for a blog post — no API key needed.
  * 1. Pexels (only if PEXELS_API_KEY is set)
  * 2. Openverse (free, open-licence search by WordPress) — CC0 photos from rawpixel,
- *    downloaded and stored on our own server in /uploads so they never break
+ *    linked directly from the rawpixel CDN (no storage used — works on Render, VPS, anywhere)
  * 3. A built-in photo from /public/blog matching the post category
  */
 export type FoundImage = { url: string; credit: string };
 
-const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 const UA = "MyLoanWala-website/1.0 (blog cover images)";
 
 // Simple keywords that return good photos for each category
@@ -71,7 +70,6 @@ const BUILT_IN_IDS = new Set([
   "9d224b3d-d28d-4830-8edf-e8130e0e286b",
 ]);
 
-const EXT: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
 
 async function pexels(query: string): Promise<FoundImage | null> {
   const key = process.env.PEXELS_API_KEY;
@@ -94,6 +92,7 @@ type OVResult = { id: string; url: string; title?: string; width?: number; heigh
 
 async function openverse(query: string, category: string): Promise<FoundImage | null> {
   try {
+    await connectDB();
     const params = new URLSearchParams({ q: query, license: "cc0,pdm", source: "rawpixel", aspect_ratio: "wide", mature: "false", page_size: "20" });
     const res = await fetch(`https://api.openverse.org/v1/images/?${params}`, { headers: { "User-Agent": UA } });
     if (!res.ok) return null;
@@ -110,18 +109,10 @@ async function openverse(query: string, category: string): Promise<FoundImage | 
         (r.width || 0) / (r.height || 1) >= 1.25
       );
     });
-    await fs.mkdir(UPLOAD_DIR, { recursive: true });
-    const existing = new Set(await fs.readdir(UPLOAD_DIR));
-    for (const r of good.slice(0, 8)) {
-      if (BUILT_IN_IDS.has(r.id) || [...existing].some((f) => f.startsWith(`ov-${r.id}.`))) continue; // already used on the site
-      const img = await fetch(r.url, { headers: { "User-Agent": UA } });
-      const ext = EXT[(img.headers.get("content-type") || "").split(";")[0]];
-      if (!img.ok || !ext) continue;
-      const buf = Buffer.from(await img.arrayBuffer());
-      if (buf.length < 20_000 || buf.length > 6_000_000) continue;
-      const name = `ov-${r.id}.${ext}`;
-      await fs.writeFile(path.join(UPLOAD_DIR, name), buf);
-      return { url: `/uploads/${name}`, credit: "Photo: rawpixel (CC0) via Openverse" };
+    for (const r of good.slice(0, 10)) {
+      if (BUILT_IN_IDS.has(r.id)) continue; // already shipped in /public/blog
+      if (await Blog.exists({ coverImage: r.url })) continue; // already used by another post
+      return { url: r.url, credit: "Photo: rawpixel (CC0) via Openverse" };
     }
     return null;
   } catch {

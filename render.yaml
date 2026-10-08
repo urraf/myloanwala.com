@@ -1,0 +1,49 @@
+# Render Blueprint — Render reads this file when you choose "New → Blueprint" and pick this repo.
+# Secret values (sync: false) are entered in the Render dashboard, never stored in Git.
+services:
+  - type: web
+    name: myloanwala
+    runtime: node
+    plan: starter        # always-on (needed for the hourly AI blog scheduler). "free" works but sleeps after 15 min idle.
+    region: singapore    # closest Render region to India
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    autoDeploy: true     # redeploys automatically on every git push to main
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      # --- required ---
+      - key: MONGODB_URI
+        sync: false
+      - key: AUTH_SECRET
+        generateValue: true
+      - key: SITE_URL
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      # --- AI ---
+      - key: GROQ_API_KEY
+        sync: false
+      # --- email (Hostinger SMTP) ---
+      - key: SMTP_HOST
+        value: smtp.hostinger.com
+      - key: SMTP_PORT
+        value: "465"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      - key: SMTP_FROM
+        sync: false
+      - key: LEAD_NOTIFY_EMAIL
+        sync: false
+      # --- brand & contact (optional; defaults are MyLoanWala) ---
+      - key: NEXT_PUBLIC_SITE_NAME
+        sync: false
+      - key: NEXT_PUBLIC_PHONE
+        sync: false
+      - key: NEXT_PUBLIC_EMAIL
+        sync: false

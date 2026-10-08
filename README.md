@@ -67,10 +67,20 @@ Floating robot button on every public page. Uses Groq (`GROQ_API_KEY`; optional 
 The scheduler runs **inside the app** (`src/instrumentation.ts` → `src/lib/scheduler.ts`). It checks every 5 minutes and publishes a new post when the interval set in **Admin → AI Automation** has passed (default: every 1 hour).
 
 - Needs `GROQ_API_KEY` (writes the post — the best available Groq model is chosen automatically, with fallback if one is rate-limited)  — **no image key needed**: cover photos come from Openverse
-  (free CC0 photos, filtered for relevance and stored in `uploads/` on your server), with built-in category photos as a fallback.
+  (free CC0 photos, filtered for relevance and linked from the rawpixel CDN), with built-in category photos as a fallback.
   `PEXELS_API_KEY` is optional if you ever get one.
 - Turn it on/off, change the interval and topics from **Admin → AI Automation**. There's also a **Generate with AI** button for one-off posts.
 - Keep PM2 at **1 instance**. Running more instances is safe (each run is locked in the database), but it isn't needed.
+
+## Deploy on Render
+
+1. Render → **New → Blueprint** → connect GitHub → pick this repo (it reads `render.yaml`).
+2. Fill in the secret values it asks for (copy them from your `.env.production`), click **Apply**.
+3. MongoDB Atlas → Network Access → add Render's **outbound IPs** (service → Connect → Outbound) or `0.0.0.0/0`.
+4. Render → service → Settings → **Custom Domains** → add `myloanwala.com` and `www.myloanwala.com`, then add the DNS records Render shows at your domain registrar. SSL is automatic.
+
+Uploaded images are stored in MongoDB and AI blog photos are linked from a CDN, so nothing is lost when Render redeploys.
+Use the **Starter** plan (always on) — the free plan sleeps after 15 minutes, which pauses the hourly AI blog automation and makes the first visit slow.
 
 ## Deploy on Hostinger VPS (Ubuntu)
 
@@ -120,7 +130,7 @@ sudo apt install -y certbot python3-certbot-nginx && sudo certbot --nginx -d myl
 On `/admin` click **Forgot Password? Reset with OTP** (also in Admin → Account). Enter the admin email + captcha → a 6-digit OTP is emailed (valid 10 min, 5 attempts) → enter OTP + new password.
 `DUMMY_OTP` in `.env` makes a fixed OTP work for testing — **keep it empty on the live server**.
 
-> Uploaded blog images are saved in the `uploads/` folder. Keep this folder when you redeploy, and include it in backups.
+> Uploaded blog images are stored in MongoDB, so there are no files on the server to back up.
 
 ## Where to edit content
 

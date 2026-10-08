@@ -107,6 +107,17 @@ const offerSchema = new Schema(
 );
 export const Offer = model("Offer", offerSchema);
 
+/* ---------- Uploaded images (stored in the database, so they survive redeploys on any host) ---------- */
+const uploadSchema = new Schema(
+  {
+    name: { type: String, required: true, unique: true },
+    contentType: { type: String, required: true },
+    data: { type: Buffer, required: true },
+  },
+  { timestamps: true }
+);
+export const Upload = model("Upload", uploadSchema);
+
 /* ---------- Settings (single document) ---------- */
 const settingsSchema = new Schema(
   {
