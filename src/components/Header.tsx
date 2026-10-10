@@ -39,10 +39,10 @@ export default function Header() {
             <Logo />
           </div>
 
-          <nav className="hidden items-center gap-7 xl:flex">
+          <nav className="hidden items-center gap-4 xl:flex 2xl:gap-6">
             {NAV_MENUS.map((m) => (
               <div key={m.label} className="group relative">
-                <button className="flex items-center gap-1.5 py-6 text-[15px] font-medium text-ink group-hover:text-brand">
+                <button className="flex items-center gap-1 whitespace-nowrap py-6 text-[15px] font-medium text-ink group-hover:text-brand">
                   {m.label}
                   <ChevronDown className="h-4 w-4 transition group-hover:rotate-180" />
                 </button>
@@ -65,7 +65,7 @@ export default function Header() {
             </a>
             <Link
               href="/partner"
-              className="hidden items-center gap-1.5 rounded border border-brand px-3 py-1.5 text-[13px] font-medium text-brand hover:bg-tile sm:flex"
+              className="hidden items-center gap-1.5 whitespace-nowrap rounded border border-brand px-3 py-1.5 text-[13px] font-medium text-brand hover:bg-tile sm:flex xl:hidden 2xl:flex"
             >
               <Handshake className="h-4 w-4" /> Partner Login
             </Link>

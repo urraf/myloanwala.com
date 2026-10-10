@@ -18,7 +18,7 @@ Every form on the website saves a **lead** in MongoDB. The admin assigns leads t
 ## Rebrand for a client (no code changes)
 
 Everything brand-related comes from `.env` (see the **BRAND** and **CONTACT** sections in `.env.example`):
-`NEXT_PUBLIC_SITE_NAME`, `NEXT_PUBLIC_DOMAIN`, logo text/tagline **or** `NEXT_PUBLIC_LOGO_IMAGE` (put the file in `/public`),
+`NEXT_PUBLIC_SITE_NAME`, `NEXT_PUBLIC_DOMAIN`, logo text/tagline and `NEXT_PUBLIC_LOGO_IMAGE` (badge file in `/public`; replace `public/logo.png` and `src/app/icon.png` for a new brand),
 `NEXT_PUBLIC_BOT_NAME`, phone, WhatsApp, email, address, hours. Run `npm run build` after changing them.
 The starter blog articles, AI prompts, chatbot, emails, social preview image and footer all use these values.
 Brand colours live in `src/app/globals.css` (`--color-brand`, `--color-navy`, …).

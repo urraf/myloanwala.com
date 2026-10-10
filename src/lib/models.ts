@@ -135,8 +135,14 @@ const settingsSchema = new Schema(
 export const Settings = model("Settings", settingsSchema);
 
 export const DEFAULT_TOPICS = [
-  "Personal loans in India",
   "Home loans and home loan interest rates",
+  "Loan against property (LAP) — eligibility, documents and uses",
+  "Home loan balance transfer and top-up loans",
+  "Buying your first home in India — home loan tips",
+  "Loan against property for business owners",
+  "CIBIL score and home loan eligibility",
+  "Home loan tax benefits",
+  "Personal loans in India",
   "Business loans and MSME loans",
   "Credit score / CIBIL score tips",
   "Loan EMI planning and prepayment",

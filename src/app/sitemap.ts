@@ -7,7 +7,7 @@ import { SITE } from "@/lib/site";
 export const revalidate = 3600;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const pages = ["", "/apply", "/offers", "/emi-calculator", "/blog", "/about", "/contact", "/partner", "/privacy-policy", "/terms"];
+  const pages = ["", "/credit-score", "/apply", "/offers", "/emi-calculator", "/blog", "/about", "/contact", "/partner", "/privacy-policy", "/terms"];
   const urls: MetadataRoute.Sitemap = [
     ...pages.map((p) => ({ url: `${SITE.url}${p}` })),
     ...PRODUCTS.map((p) => ({ url: `${SITE.url}/${p.slug}`, priority: 0.9 })),

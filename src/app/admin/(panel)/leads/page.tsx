@@ -4,7 +4,7 @@ import StatusBadge from "@/components/StatusBadge";
 import { requireAdmin } from "@/lib/auth";
 import { LEAD_STATUS, Lead, Partner } from "@/lib/models";
 import { deleteLead, updateLead } from "@/lib/actions/admin";
-import { LOAN_TYPES } from "@/lib/products";
+import { LEAD_TYPES } from "@/lib/products";
 import { formatINR } from "@/lib/site";
 import { leadFilter, type LeadQuery } from "@/lib/lead-filter";
 
@@ -46,7 +46,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
         </select>
         <select name="type" defaultValue={sp.type || ""} className="input">
           <option value="">All loan types</option>
-          {LOAN_TYPES.map((t) => <option key={t}>{t}</option>)}
+          {LEAD_TYPES.map((t) => <option key={t}>{t}</option>)}
         </select>
         <div className="flex gap-2">
           <button className="btn-primary flex-1">Filter</button>

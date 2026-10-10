@@ -18,18 +18,18 @@ import { SITE, whatsappLink } from "@/lib/site";
 /* ------------------------------------------------------------------ */
 
 const STORIES = [
-  { quote: `${SITE.name} helped me when I needed funds for my shop the most.`, name: "Harish Saini", city: "New Delhi", icon: "man-office", from: "#1d1f4f", to: "#4b3f8f" },
-  { quote: "The right loan at the right time made all the difference for my family.", name: "Varsha Gupta", city: "Jaipur", icon: "woman-office", from: "#2b1d4f", to: "#6a3f8f" },
-  { quote: "Some dreams are special long before they are realised. Got my home loan!", name: "Dr. Brahmanand", city: "Gurgaon", icon: "man-office", from: "#1d3a4f", to: "#3f6f8f" },
-  { quote: "Turned my small business into a growing brand with a quick business loan.", name: "Pawan Agarwal", city: "Lucknow", icon: "man-office", from: "#3a1d4f", to: "#7a3f8f" },
+  { quote: "Bought our first home in Noida — the team got us a home loan at a lower rate than our bank offered.", name: "Rajeev & Kavita Sharma", city: "Noida", loan: "Home Loan", image: "/hero/home-loan.webp" },
+  { quote: `Got ₹45 Lakh against my shop property to expand my business. ${SITE.name} handled everything.`, name: "Harish Saini", city: "New Delhi", loan: "Loan Against Property", image: "/hero/property.webp" },
+  { quote: "Transferred my home loan balance and my EMI dropped by over ₹4,000 a month.", name: "Dr. Brahmanand Dubey", city: "Gurgaon", loan: "Home Loan Transfer", image: "/blog/home-loan.webp" },
+  { quote: "Quick business loan for my store before Diwali — no collateral, very smooth process.", name: "Pawan Agarwal", city: "Lucknow", loan: "Business Loan", image: "/hero/business.jpg" },
 ];
 
 const REVIEWS = [
-  { title: "Got my personal loan in 2 days!", text: `I needed money urgently for my sister's wedding. The ${SITE.name} advisor compared offers from multiple banks and got me a lower rate than my own bank. Documents were collected online and the amount was credited within two days. Very smooth experience.`, name: "Rahul Sharma", date: "28-Sep-2026" },
-  { title: "Hassle-free business loan", text: "I run a small boutique and needed working capital before the festive season. The team guided me on documents, suggested the right NBFC and the loan was disbursed quickly without any collateral. Highly recommended for small business owners.", name: "Priya Verma", date: "19-Sep-2026" },
-  { title: "Saved a lot on my home loan", text: `I transferred my home loan balance through ${SITE.name} and my EMI reduced noticeably. The advisor explained every charge clearly and there were no hidden surprises. Very transparent and professional team.`, name: "Amit Patel", date: "07-Sep-2026" },
-  { title: "Best place for comparing loans", text: "Instead of visiting five banks, I got all offers in one place. The EMI calculator helped me plan, and the expert call helped me choose the best option for my profile. Loved the quick service.", name: "Sneha Iyer", date: "30-Aug-2026" },
-  { title: "Gold loan within an hour", text: "Needed cash for a medical emergency. Got a gold loan arranged at a good rate within an hour. The staff was polite and the process was very simple.", name: "Mohd. Imran", date: "21-Aug-2026" },
+  { title: "Home loan approved in 7 days", text: `We were buying our first flat and were confused about which bank to choose. The ${SITE.name} advisor compared offers from five banks, helped with the property papers and our home loan was sanctioned within a week at a great rate.`, name: "Rahul Mehta", date: "28-Sep-2026" },
+  { title: "Best rate on Loan Against Property", text: "I needed funds for my factory expansion and pledged my commercial property. The team got me a high loan amount at a lower interest rate than I expected, with a long tenure. Very professional and transparent.", name: "Suresh Patil", date: "19-Sep-2026" },
+  { title: "Saved lakhs with balance transfer", text: `I transferred my existing home loan through ${SITE.name} and my EMI reduced noticeably. The advisor explained every charge clearly and there were no hidden surprises.`, name: "Amit Patel", date: "07-Sep-2026" },
+  { title: "Got my CIBIL score checked for free", text: "I wasn't sure if I would get a home loan. They checked my CIBIL score, told me exactly what to improve, and three months later my home loan was approved.", name: "Sneha Iyer", date: "30-Aug-2026" },
+  { title: "Quick personal loan too", text: "Needed money for my sister's wedding. Got a personal loan in two days with very simple documentation. Polite and helpful team.", name: "Mohd. Imran", date: "21-Aug-2026" },
 ];
 
 const FEATURES = [
@@ -83,11 +83,11 @@ function PhoneMockup() {
       <div className="absolute left-0 top-16 h-[320px] w-[150px] -rotate-6 rounded-[28px] border-[7px] border-[#1c1d1f] bg-white p-3 shadow-xl sm:w-[180px]">
         <p className="font-serif text-xs text-[#1b3a8c]">{SITE.logoText1}<span className="text-brand">{SITE.logoText2}</span></p>
         <div className="mt-3 rounded-lg bg-tile p-2">
-          <p className="text-[8px] text-muted">Pre-approved offer</p>
-          <p className="text-sm font-bold text-navy">₹5,00,000</p>
+          <p className="text-[8px] text-muted">LAP offer</p>
+          <p className="text-sm font-bold text-navy">₹75,00,000</p>
         </div>
         <div className="mt-3 grid grid-cols-2 gap-1.5">
-          {["money-bag", "house", "briefcase", "coin"].map((i) => (
+          {["house", "office", "money-bag", "briefcase"].map((i) => (
             // eslint-disable-next-line @next/next/no-img-element
             <img key={i} src={`/icons/${i}.png`} alt="" className="rounded-md bg-tile p-1.5" />
           ))}
@@ -97,17 +97,17 @@ function PhoneMockup() {
       <div className="absolute left-14 top-2 h-[360px] w-[170px] rounded-[30px] border-[8px] border-[#1c1d1f] bg-[#0b3b2c] shadow-2xl sm:left-24 sm:h-[420px] sm:w-[200px]">
         <div className="mx-auto mt-1.5 h-4 w-16 rounded-full bg-[#1c1d1f]" />
         <div className="px-3 pt-3 text-center text-white">
-          <p className="font-serif text-lg font-semibold italic">Instant Cash</p>
-          <p className="text-[9px] text-white/70">in your account</p>
-          <p className="mt-2 rounded-full border border-[#ffd84d]/70 py-1 text-lg font-bold text-[#ffd84d]">₹10,00,000</p>
+          <p className="font-serif text-lg font-semibold italic">Dream Home</p>
+          <p className="text-[9px] text-white/70">home loan from 7.35%*</p>
+          <p className="mt-2 rounded-full border border-[#ffd84d]/70 py-1 text-lg font-bold text-[#ffd84d]">₹50,00,000</p>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/icons/money-wings.png" alt="" className="mx-auto mt-2 h-16 w-16" />
-          <p className="mt-2 rounded-md bg-white py-1.5 text-[10px] font-semibold text-ink">Get Money Now ›</p>
+          <img src="/icons/house.png" alt="" className="mx-auto mt-2 h-16 w-16" />
+          <p className="mt-2 rounded-md bg-white py-1.5 text-[10px] font-semibold text-ink">Check Eligibility ›</p>
         </div>
         <div className="mx-2 mt-3 rounded-lg bg-white p-2">
           <p className="text-[8px] font-semibold text-muted">LOANS</p>
           <div className="mt-1 grid grid-cols-4 gap-1">
-            {["money-bag", "briefcase", "house", "car"].map((i) => (
+            {["house", "office", "money-bag", "briefcase"].map((i) => (
               // eslint-disable-next-line @next/next/no-img-element
               <img key={i} src={`/icons/${i}.png`} alt="" className="rounded bg-tile p-1" />
             ))}
@@ -129,6 +129,9 @@ const CARD_COLORS = [
 
 export default async function HomePage() {
   const [offers, { blogs }] = await Promise.all([getOffers(), getBlogs({ limit: 3 })]);
+  // Core products first: best 4 Home Loan + best 4 Loan Against Property offers
+  const core = [...offers.filter((o) => o.loanType === "Home Loan").slice(0, 4), ...offers.filter((o) => o.loanType === "Loan Against Property").slice(0, 4)];
+  const featured = core.length >= 4 ? core : offers.slice(0, 8);
   const qrSvg = await QRCode.toString(`${SITE.url}/apply`, { type: "svg", margin: 0, color: { dark: "#1c1d1f", light: "#ffffff" } });
 
 
@@ -138,15 +141,16 @@ export default async function HomePage() {
       <section className="container-x pt-4 sm:pt-10">
         <div className="grid items-start gap-8 lg:grid-cols-[1fr_460px] xl:grid-cols-[1fr_457px]">
           <div className="hidden pt-4 lg:block">
-            <h1 className="font-serif text-[42px] leading-[1.35] text-[#333]">
+            <h1 className="font-serif text-[34px] leading-[1.3] text-[#333] xl:text-[36px]">
               <span className="font-light">India&apos;s best platform for</span>
               <br />
-              <span className="font-bold text-ink">Personal &amp; Business Loans</span>
+              <span className="font-bold text-ink">Home Loan &amp; Loan Against Property</span>
             </h1>
-            <div className="mt-10 flex gap-16">
+            <div className="mt-10 flex gap-10 xl:gap-14">
               {[
-                ["hundred", "One Stop for all", "Loan Solutions"],
+                ["house", "Lowest Home Loan", "rates from 7.35%*"],
                 ["stopwatch", "Quick, easy &", "hassle free"],
+                ["chart-up", "Free CIBIL", "score check"],
               ].map(([icon, a, b]) => (
                 <div key={a} className="flex items-center gap-3">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -226,7 +230,7 @@ export default async function HomePage() {
             Tailor Made Offers Exclusively for {SITE.name} Customers
           </h2>
           <Carousel className="mt-8">
-            {offers.slice(0, 8).map((o, i) => {
+            {featured.map((o, i) => {
               const [from, to] = CARD_COLORS[i % CARD_COLORS.length];
               const product = PRODUCTS.find((p) => p.name === o.loanType);
               return (
@@ -302,7 +306,7 @@ export default async function HomePage() {
             <div className="lg:pl-7">
               <h2 className="mt-5 font-serif text-xl font-semibold text-ink">Why Customers Choose Us</h2>
               <ul className="mt-5 space-y-4 text-[15px] text-body">
-                <li className="flex items-center gap-2.5"><CircleCheck className="h-5 w-5 shrink-0 fill-success text-white" /><span>Hand picked offers from <b className="text-ink">30+ lenders</b></span></li>
+                <li className="flex items-center gap-2.5"><CircleCheck className="h-5 w-5 shrink-0 fill-success text-white" /><span>Lowest <b className="text-ink">Home Loan &amp; LAP</b> rates from 30+ lenders</span></li>
                 <li className="flex items-center gap-2.5"><CircleCheck className="h-5 w-5 shrink-0 fill-success text-white" /><span>Money in days via <b className="text-ink">Pre-Approved Loans</b></span></li>
                 <li className="flex items-center gap-2.5"><CircleCheck className="h-5 w-5 shrink-0 fill-success text-white" /><span><b className="text-ink">Instant Sanction</b> &amp; Disbursal</span></li>
               </ul>
@@ -312,10 +316,12 @@ export default async function HomePage() {
             <Carousel>
               {STORIES.map((s) => (
                 <figure key={s.name} className="w-[240px] shrink-0 snap-start overflow-hidden rounded-lg border border-line sm:w-[268px]">
-                  <div className="relative h-[150px] overflow-hidden p-3" style={{ background: `linear-gradient(135deg, ${s.from}, ${s.to})` }}>
+                  <div className="relative h-[160px] overflow-hidden p-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/icons/${s.icon}.png`} alt="" className="absolute -bottom-3 -right-3 h-28 w-28 opacity-90" />
-                    <blockquote className="relative z-10 max-w-[78%] text-[12.5px] font-semibold leading-snug text-white">
+                    <img src={s.image} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+                    <span className="absolute inset-0 bg-linear-to-b from-[#0c1440]/90 via-[#1b1dc7]/55 to-black/30" />
+                    <span className="absolute right-2 top-2 z-10 rounded-full bg-accent px-2 py-0.5 text-[10px] font-semibold text-ink">{s.loan}</span>
+                    <blockquote className="relative z-10 mt-5 text-[12.5px] font-semibold leading-snug text-white">
                       “{s.quote}”
                     </blockquote>
                     <span className="absolute bottom-3 left-3 z-10 inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-xs font-medium text-ink">
@@ -423,16 +429,12 @@ export default async function HomePage() {
       <section className="container-x py-14 sm:py-20">
         <div className="mx-auto grid max-w-[970px] gap-10 md:grid-cols-2 md:gap-8">
           {[
-            { title: "About Us", sub: `How we are building a trusted ${SITE.name} brand`, cta: "Know More", href: "/about", from: "#b8e4ff", to: "#47bcff", icons: ["man-office", "woman-office", "classical"] },
-            { title: "Partner with Us", sub: "NBFC or DSA? Grow your loan business with us", cta: "Join Us", href: "/partner?tab=register", from: "#a3ffdc", to: "#0eea80", icons: ["handshake", "bank", "chart-up"] },
+            { title: "About Us", sub: `How we are building a trusted ${SITE.name} brand`, cta: "Know More", href: "/about", from: "#b8e4ff", to: "#47bcff", image: "/hero/team.webp" },
+            { title: "Partner with Us", sub: "NBFC or DSA? Grow your loan business with us", cta: "Join Us", href: "/partner?tab=register", from: "#a3ffdc", to: "#0eea80", image: "/hero/handshake.webp" },
           ].map((c) => (
-            <div key={c.title} className="relative rounded-md px-6 pb-16 pt-10 text-center" style={{ background: `linear-gradient(160deg, ${c.from}, ${c.to})` }}>
-              <div className="flex items-end justify-center gap-2">
-                {c.icons.map((i, n) => (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img key={i} src={`/icons/${i}.png`} alt="" className={n === 1 ? "h-32 w-32 sm:h-40 sm:w-40" : "h-20 w-20 sm:h-24 sm:w-24"} />
-                ))}
-              </div>
+            <div key={c.title} className="relative rounded-md px-6 pb-16 pt-8 text-center" style={{ background: `linear-gradient(160deg, ${c.from}, ${c.to})` }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={c.image} alt="" loading="lazy" className="mx-auto aspect-[16/9] w-full max-w-[380px] rounded-lg object-cover shadow-lg" />
               <h3 className="mt-6 text-[28px] font-bold text-[#333] sm:text-[32px]">{c.title}</h3>
               <p className="mt-3 text-[15px] text-[#333] sm:text-base">{c.sub}</p>
               <Link

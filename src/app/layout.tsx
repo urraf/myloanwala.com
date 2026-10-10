@@ -19,11 +19,11 @@ const robotoSerif = Roboto_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} — Compare & Apply for Personal, Home & Business Loans`,
+    default: `${SITE.name} — Home Loan & Loan Against Property at Lowest Rates`,
     template: `%s | ${SITE.name}`,
   },
   description:
-    "Compare loan offers from top banks & NBFCs. Apply online for personal loan, business loan, home loan, loan against property, gold loan and car loan at the best interest rates.",
+    "Compare home loan and loan against property offers from 30+ banks & NBFCs at the lowest interest rates. Also personal & business loans and a free CIBIL score check.",
   openGraph: { siteName: SITE.name, type: "website" },
 };
 

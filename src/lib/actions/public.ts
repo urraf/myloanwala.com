@@ -2,7 +2,7 @@
 
 import { connectDB } from "@/lib/db";
 import { Lead } from "@/lib/models";
-import { LOAN_TYPES } from "@/lib/products";
+import { LEAD_TYPES } from "@/lib/products";
 import { notifyNewLead } from "@/lib/notify";
 
 export type FormState = { ok?: boolean; error?: string; message?: string };
@@ -19,7 +19,7 @@ export async function submitLead(_: FormState, fd: FormData): Promise<FormState>
 
   if (name.length < 2) return { error: "Please enter your full name" };
   if (!PHONE_RE.test(phone)) return { error: "Please enter a valid 10-digit mobile number" };
-  if (!LOAN_TYPES.includes(loanType)) return { error: "Please select a loan type" };
+  if (!LEAD_TYPES.includes(loanType)) return { error: "Please select a loan type" };
   if (!fd.get("consent")) return { error: "Please accept the terms to continue" };
 
   try {

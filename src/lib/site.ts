@@ -3,8 +3,8 @@
 export const SITE = {
   name: process.env.NEXT_PUBLIC_SITE_NAME || "MyLoanWala",
   domain: process.env.NEXT_PUBLIC_DOMAIN || "myloanwala.com",
-  // Logo: either an image (e.g. /logo.png in /public) or two-colour text + tagline badge
-  logoImage: process.env.NEXT_PUBLIC_LOGO_IMAGE || "",
+  // Logo: badge image (in /public) shown next to the two-colour wordmark + tagline
+  logoImage: process.env.NEXT_PUBLIC_LOGO_IMAGE === "none" ? "" : process.env.NEXT_PUBLIC_LOGO_IMAGE || "/logo.png", // "none" = text-only logo
   logoText1: process.env.NEXT_PUBLIC_LOGO_TEXT_1 || "myloan",
   logoText2: process.env.NEXT_PUBLIC_LOGO_TEXT_2 || "wala",
   logoTagline: process.env.NEXT_PUBLIC_LOGO_TAGLINE || "LOAN HUA AASAN",

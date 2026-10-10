@@ -10,12 +10,13 @@ export default async function Footer() {
   const { blogs } = await getBlogs({ limit: 6 });
   const learn = blogs.length
     ? blogs.map((b) => ({ label: b.title, href: `/blog/${b.slug}` }))
-    : NAV_MENUS.find((m) => m.label === "Offers & Learn")!.links;
+    : NAV_MENUS.find((m) => m.label === "Learn")!.links;
 
   const columns = [
     {
       title: SITE.name,
       links: [
+        { label: "Free CIBIL Score Check", href: "/credit-score" },
         { label: "About Us", href: "/about" },
         { label: "Contact Us", href: "/contact" },
         { label: "Become a Partner", href: "/partner?tab=register" },

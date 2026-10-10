@@ -16,11 +16,15 @@ export default function LeadForm({
   loanType,
   defaultPhone = "",
   title = "Check your loan offers",
+  kind = "loan",
 }: {
   loanType?: string;
   defaultPhone?: string;
   title?: string;
+  /** "credit" = free CIBIL score check (no loan amount / income questions) */
+  kind?: "loan" | "credit";
 }) {
+  const credit = kind === "credit";
   const [state, action, pending] = useActionState<FormState, FormData>(submitLead, {});
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
@@ -33,8 +37,11 @@ export default function LeadForm({
         <CheckCircle2 className="mx-auto h-14 w-14 text-success" />
         <h3 className="mt-4 text-xl font-semibold">Thank you, {name.split(" ")[0] || "there"}!</h3>
         <p className="mt-2 text-sm text-body">
-          Your application has been received. Our loan expert will call you shortly on <b>{phone}</b> with the best
-          offers.
+          {credit ? (
+            <>Our credit expert will call you shortly on <b>{phone}</b> with your CIBIL score and the loan offers you qualify for.</>
+          ) : (
+            <>Your application has been received. Our loan expert will call you shortly on <b>{phone}</b> with the best offers.</>
+          )}
         </p>
         <p className="mt-4 text-xs text-muted">Need help now? Call {SITE.phone}</p>
         <Link href="/" className="btn-outline mt-5">Back to Home</Link>
@@ -88,12 +95,14 @@ export default function LeadForm({
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <button type="button" onClick={next} className="btn-primary w-full py-3">
-            Apply Now
+            {credit ? "Check My Score" : "Apply Now"}
           </button>
         </div>
       ) : (
         <div key="step2" className="space-y-4">
-          {loanType ? (
+          {credit ? (
+            <input type="hidden" name="loanType" value="Credit Score Check" />
+          ) : loanType ? (
             <input type="hidden" name="loanType" value={loanType} />
           ) : (
             <div>
@@ -103,6 +112,7 @@ export default function LeadForm({
               </select>
             </div>
           )}
+          {!credit && (
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="label">Loan Amount (₹)</label>
@@ -113,6 +123,7 @@ export default function LeadForm({
               <input name="monthlyIncome" type="number" min={0} className="input" placeholder="e.g. 40000" />
             </div>
           </div>
+          )}
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="label">City</label>
@@ -135,13 +146,13 @@ export default function LeadForm({
           <label className="flex items-start gap-2 text-xs text-body">
             <input type="checkbox" name="consent" defaultChecked className="mt-0.5 accent-brand" />
             I agree to the <Link href="/terms" className="text-brand underline">Terms</Link> and authorise {SITE.name} & its
-            partners to contact me via call / SMS / WhatsApp.
+            partners to contact me via call / SMS / WhatsApp{credit ? " and to check my credit report for loan purposes" : ""}.
           </label>
           {error && <p className="text-sm text-red-600">{error}</p>}
           <div className="flex gap-2">
             <button type="button" onClick={() => setStep(1)} className="btn-outline">Back</button>
             <button disabled={pending} className="btn-primary flex-1 py-3">
-              {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : "Get Offers"}
+              {pending ? <Loader2 className="h-4 w-4 animate-spin" /> : credit ? "Get My Free Score" : "Get Offers"}
             </button>
           </div>
         </div>

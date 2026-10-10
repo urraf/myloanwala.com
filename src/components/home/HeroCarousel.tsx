@@ -16,32 +16,39 @@ export default function HeroCarousel() {
     <div className="min-w-0">
       <div className="relative overflow-hidden rounded-2xl lg:rounded-3xl">
         <div className="flex transition-transform duration-700" style={{ transform: `translateX(-${i * 100}%)` }}>
-          {HERO_SLIDES.map((s) => (
+          {HERO_SLIDES.map((s, n) => (
             <Link
               key={s.title}
               href={s.href}
-              className="relative flex min-h-[176px] w-full shrink-0 items-center overflow-hidden px-5 py-6 sm:min-h-[220px] sm:px-7"
-              style={{ background: `linear-gradient(115deg, ${s.from} 0%, ${s.to} 100%)` }}
+              className="relative flex min-h-[184px] w-full shrink-0 items-center overflow-hidden px-5 py-6 sm:min-h-[220px] sm:px-7"
+              style={{ background: s.from }}
             >
-              {/* decorative rings */}
-              <span className="absolute -right-10 -top-16 h-56 w-56 rounded-full border-[28px] border-white/5" />
-              <span className="absolute -bottom-20 right-24 h-40 w-40 rounded-full bg-white/5" />
+              {/* photo on the right, fading into the brand colour */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={`/icons/${s.icon}.png`} alt="" className="absolute -right-2 bottom-2 h-28 w-28 rotate-[-8deg] drop-shadow-2xl sm:right-6 sm:h-40 sm:w-40" />
-              <div className="relative z-10 max-w-[72%]">
-                <p className="font-serif text-xl font-semibold leading-snug text-white sm:text-2xl">
+              <img
+                src={s.image}
+                alt=""
+                loading={n === 0 ? "eager" : "lazy"}
+                className="absolute inset-y-0 right-0 h-full w-[68%] object-cover"
+              />
+              <span
+                className="absolute inset-0"
+                style={{ background: `linear-gradient(90deg, ${s.from} 0%, ${s.from} 34%, ${s.to}cc 58%, transparent 100%)` }}
+              />
+              <div className="relative z-10 max-w-[64%]">
+                <p className="font-serif text-xl font-semibold leading-snug text-white drop-shadow sm:text-2xl">
                   {s.title}
                   <br />
                   <span className="font-sans text-[#ffd84d]">{s.highlight}</span>
                 </p>
-                <p className="mt-3 flex items-center gap-2 text-xs text-white/90 sm:text-[13px]">
-                  <span className="h-1 w-1 rounded-full bg-white" /> {s.point}
+                <p className="mt-3 flex items-start gap-2 text-xs text-white/95 drop-shadow sm:text-[13px]">
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-white" /> {s.point}
                 </p>
                 <span
                   className="mt-5 inline-flex items-center gap-0.5 rounded-full px-4 py-2 text-sm font-semibold text-ink shadow-md sm:text-[15px]"
                   style={{ background: s.btn }}
                 >
-                  Apply Now <ChevronRight className="h-4 w-4" />
+                  {s.cta || "Apply Now"} <ChevronRight className="h-4 w-4" />
                 </span>
               </div>
             </Link>
