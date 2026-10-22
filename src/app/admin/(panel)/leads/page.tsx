@@ -100,7 +100,8 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
                       <div className="mt-1.5"><StatusBadge status={l.status} /></div>
                     </td>
                     <td className="px-4 py-3">
-                      <form action={updateLead} className="grid grid-cols-2 gap-2">
+                      {/* key = current values → after saving, the form re-renders with the new status instead of snapping back */}
+                      <form key={`${l._id}-${l.status}-${l.assignedTo || ""}-${l.notes}`} action={updateLead} className="grid grid-cols-2 gap-2">
                         <input type="hidden" name="id" value={String(l._id)} />
                         <select name="status" defaultValue={l.status} className="input py-1.5 text-xs capitalize">
                           {LEAD_STATUS.map((s) => <option key={s} value={s}>{s.replace("-", " ")}</option>)}

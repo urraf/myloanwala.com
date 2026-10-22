@@ -126,7 +126,7 @@ export default async function PartnerDashboard({ searchParams }: { searchParams:
                       <td className="px-4 py-3 text-xs text-muted">{new Date(l.createdAt).toLocaleDateString("en-IN")}</td>
                       <td className="px-4 py-3">
                         {assigned ? (
-                          <form action={partnerUpdateLead} className="flex flex-col gap-2">
+                          <form key={`${l._id}-${l.status}-${l.notes}`} action={partnerUpdateLead} className="flex flex-col gap-2">
                             <input type="hidden" name="id" value={String(l._id)} />
                             <select name="status" defaultValue={l.status} className="input py-1.5 text-xs capitalize">
                               {LEAD_STATUS.map((s) => <option key={s} value={s}>{s.replace("-", " ")}</option>)}
