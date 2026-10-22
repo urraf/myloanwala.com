@@ -10,11 +10,12 @@ import { generateBlogPost } from "./ai-blog";
 const CHECK_EVERY_MS = 5 * 60 * 1000;
 const g = globalThis as unknown as { _blogScheduler?: NodeJS.Timeout };
 
-async function tick() {
+/** One scheduler check. Returns what happened (used by the /api/cron endpoint too). */
+export async function tick(): Promise<string> {
   try {
     await connectDB();
     const settings = await getSettings();
-    if (!settings.autoBlogEnabled) return;
+    if (!settings.autoBlogEnabled) return "automation is off";
 
     const hours = Math.max(1, settings.intervalHours || 1);
     // Small slack so a 1-hour schedule doesn't drift to 1h05m
@@ -25,15 +26,17 @@ async function tick() {
       { key: "main", $or: [{ lastRunAt: null }, { lastRunAt: { $lte: due } }] },
       { lastRunAt: new Date(), lastStatus: "Running…" }
     );
-    if (!claimed) return;
+    if (!claimed) return "not due yet";
 
     const blog = await generateBlogPost({ publish: settings.autoPublish !== false });
     await Settings.updateOne({ key: "main" }, { lastStatus: `✅ ${blog.published ? "Published" : "Saved as draft"}: "${blog.title}"` });
     console.log(`[blog-scheduler] published: ${blog.title}`);
+    return `published: ${blog.title}`;
   } catch (e) {
     const msg = (e as Error).message;
     console.error("[blog-scheduler]", msg);
     await Settings.updateOne({ key: "main" }, { lastStatus: `❌ ${msg.slice(0, 300)}` }).catch(() => {});
+    return `error: ${msg}`;
   }
 }
 

@@ -8,7 +8,8 @@ import { Admin, Blog, LEAD_STATUS, Lead, Offer, PARTNER_STATUS, PARTNER_TYPES, P
 import {
   checkPassword, createSession, destroySession, ensureAdminSeeded, hashPassword, requireAdmin,
 } from "@/lib/auth";
-import { sendMail } from "@/lib/mail";
+import { sendMail, smtpConfigured } from "@/lib/mail";
+import { leadAlertEmail } from "@/lib/notify";
 import { verifyCaptcha } from "@/lib/captcha";
 import { aiSeoForContent, aiWriteDraft, findImage, generateBlogPost, type BlogDraft } from "@/lib/ai-blog";
 import { SAMPLE_OFFERS } from "@/lib/data";
@@ -107,6 +108,19 @@ export async function adminChangePassword(_: FormState, fd: FormData): Promise<F
   admin.passwordHash = await hashPassword(password);
   await admin.save();
   return { ok: true, message: "Password changed successfully." };
+}
+
+/** Sends a test email to the lead-alert address so the owner can confirm email delivery works. */
+export async function sendTestEmail(): Promise<FormState> {
+  await requireAdmin();
+  if (!smtpConfigured()) return { error: "Email is not set up on the server (SMTP_HOST, SMTP_USER, SMTP_PASS are missing)." };
+  const to = leadAlertEmail();
+  try {
+    await sendMail(to, `${SITE.name}: test email ✔`, `<p>This is a test from your ${SITE.name} admin panel.</p><p>New-lead alerts will arrive at this address.</p>`);
+    return { ok: true, message: `Test email sent to ${to}. Check the inbox (and spam folder).` };
+  } catch (e) {
+    return { error: `Email failed: ${(e as Error).message}` };
+  }
 }
 
 /** Deletes the sample leads & partners added for the demo (marked demo: true). */

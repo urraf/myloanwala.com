@@ -1,14 +1,15 @@
-import { sendMail } from "./mail";
+import { sendMail, smtpConfigured } from "./mail";
 import { SITE, formatINR } from "./site";
 
-/** Email address that receives new-lead alerts (LEAD_NOTIFY_EMAIL, else ADMIN_EMAIL). */
-const to = () => process.env.LEAD_NOTIFY_EMAIL || process.env.ADMIN_EMAIL || "";
+/** Email address that receives new-lead alerts: LEAD_NOTIFY_EMAIL, else the business email shown on the website. */
+export const leadAlertEmail = () => process.env.LEAD_NOTIFY_EMAIL || SITE.email;
+const to = leadAlertEmail;
 const row = (k: string, v: unknown) =>
   v ? `<tr><td style="padding:6px 12px;color:#6b7280">${k}</td><td style="padding:6px 12px;font-weight:600">${String(v).replace(/</g, "&lt;")}</td></tr>` : "";
 
 /** Fire-and-forget email to the business owner when a new lead arrives. Never throws. */
 export function notifyNewLead(lead: { name: string; phone: string; loanType: string; city?: string; amount?: number; monthlyIncome?: number; employment?: string; email?: string }, source: string) {
-  if (!to() || !process.env.SMTP_HOST) return;
+  if (!to() || !smtpConfigured()) return;
   const html = `<div style="font-family:Arial,sans-serif;max-width:520px">
     <h2 style="color:#0066ff;margin:0 0 4px">New ${lead.loanType} lead</h2>
     <p style="margin:0 0 12px;color:#6b7280">Source: ${source}</p>
@@ -22,7 +23,7 @@ export function notifyNewLead(lead: { name: string; phone: string; loanType: str
 }
 
 export function notifyNewPartner(p: { name: string; company: string; type: string; phone: string; email: string; city?: string }) {
-  if (!to() || !process.env.SMTP_HOST) return;
+  if (!to() || !smtpConfigured()) return;
   const html = `<div style="font-family:Arial,sans-serif"><h2 style="color:#0066ff">New ${p.type} partner registration</h2>
     <table>${row("Company", p.company)}${row("Contact", p.name)}${row("Mobile", p.phone)}${row("Email", p.email)}${row("City", p.city)}</table>
     <p><a href="${SITE.url}/admin/partners">Approve in admin panel</a></p></div>`;

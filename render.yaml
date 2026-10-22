@@ -18,6 +18,8 @@ services:
         sync: false
       - key: AUTH_SECRET
         generateValue: true
+      - key: CRON_SECRET          # for the hourly blog trigger: /api/cron?key=...
+        generateValue: true
       - key: SITE_URL
         sync: false
       - key: ADMIN_EMAIL

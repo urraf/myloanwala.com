@@ -26,7 +26,8 @@ Brand colours live in `src/app/globals.css` (`--color-brand`, `--color-navy`, �
 ## Lead alerts
 
 Every new lead (website form, AI chat, partner) and every new partner registration is emailed to
-`LEAD_NOTIFY_EMAIL` (or `ADMIN_EMAIL`) once SMTP is configured.
+`LEAD_NOTIFY_EMAIL` (or, if empty, the business email `NEXT_PUBLIC_EMAIL`) once SMTP is configured.
+Check it any time with **Admin → Account → Send Test Email**.
 
 ## Fill a new database (`npm run seed`)
 
@@ -70,6 +71,9 @@ The scheduler runs **inside the app** (`src/instrumentation.ts` → `src/lib/sch
   (free CC0 photos, filtered for relevance and linked from the rawpixel CDN), with built-in category photos as a fallback.
   `PEXELS_API_KEY` is optional if you ever get one.
 - Turn it on/off, change the interval and topics from **Admin → AI Automation**. There's also a **Generate with AI** button for one-off posts.
+- **Hosts that sleep when idle (Render free plan):** create a free job at **cron-job.org** that opens
+  `https://your-domain/api/cron?key=<CRON_SECRET>` every hour. It wakes the site and runs the automation
+  (safe to call any time — it only posts when one is due). Not needed on always-on hosting.
 - Keep PM2 at **1 instance**. Running more instances is safe (each run is locked in the database), but it isn't needed.
 
 ## Deploy on Render

@@ -6,6 +6,9 @@ import nodemailer from "nodemailer";
  * SMTP_HOST=smtp.hostinger.com, SMTP_PORT=465).
  * If SMTP is not configured, the email is printed to the server log instead.
  */
+/** True when SMTP_HOST / SMTP_USER / SMTP_PASS are all set. */
+export const smtpConfigured = () => !!(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
+
 export async function sendMail(to: string, subject: string, html: string) {
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, SMTP_FROM } = process.env;
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) {
