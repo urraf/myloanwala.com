@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
 import { CheckCircle2 } from "lucide-react";
+import { pageMetadata } from "@/lib/seo";
 import LeadForm from "@/components/LeadForm";
 import { getProduct } from "@/lib/products";
 
-export const metadata: Metadata = { title: "Apply for a Loan Online" };
+export function generateMetadata() {
+  return pageMetadata({ title: "Apply Online for Home Loan & LAP in 2 Minutes", description: "Apply online for a home loan, loan against property, personal or business loan. Share a few details and get the best offers from 30+ banks & NBFCs — free.", path: "/apply", keywords: ["apply home loan online", "apply loan online", "instant loan application"] });
+}
 
 export default async function ApplyPage({ searchParams }: { searchParams: Promise<{ type?: string; phone?: string }> }) {
   const { type, phone } = await searchParams;

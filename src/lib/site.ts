@@ -11,6 +11,11 @@ export const SITE = {
   logoTile: false, // true = show the logo on a white tile on dark backgrounds (footer)
   botName: process.env.NEXT_PUBLIC_BOT_NAME || "Loan Mitra",
   tagline: "India's trusted platform for Loans & Offers",
+  // SEO: homepage title/description and the main search phrase for this brand
+  seoTitle: "MyLoanWala — Home Loan & Loan Against Property at Lowest Rates",
+  seoDescription:
+    "Compare home loan & loan against property offers from 30+ banks at the lowest rates. Free CIBIL check, EMI calculator & expert help. Apply online in 2 minutes.",
+  seoKeywords: ["home loan", "loan against property", "home loan interest rate", "LAP", "personal loan", "business loan", "CIBIL score check", "EMI calculator", "home loan in Delhi"],
   phone: process.env.NEXT_PUBLIC_PHONE || "+91 99537 10961",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP || "", // defaults to phone
   email: process.env.NEXT_PUBLIC_EMAIL || "myloanwala050@gmail.com",
@@ -31,6 +36,10 @@ export const BRANDS: Brand[] = [
     ...SITE,
     name: "Best Home Loan",
     domain: "besthomeloanindia.com",
+    seoTitle: "Best Home Loan in India — Lowest Home Loan & LAP Interest Rates",
+    seoDescription:
+      "Find the best home loan in India. Compare home loan & LAP interest rates from 30+ banks & NBFCs, check your CIBIL score free and apply online with expert help.",
+    seoKeywords: ["best home loan", "best home loan in India", "home loan interest rates", "lowest home loan rate", "loan against property", "home loan balance transfer", "home loan eligibility", "home loan Delhi"],
     logoImage: "/logo-bhl.png", // house + hand symbol (cleaned, transparent); full logo: /logo-bhl-full.png
     logoTile: true,
     logoText1: "besthome",

@@ -1,8 +1,10 @@
-import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
+import { pageMetadata } from "@/lib/seo";
 import { getBrand } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Privacy Policy" };
+export function generateMetadata() {
+  return pageMetadata({ title: "Privacy Policy", description: "How we collect, use and protect your personal information when you apply for a loan or check offers on our website.", path: "/privacy-policy" });
+}
 
 export default async function PrivacyPage() {
   const SITE = await getBrand();

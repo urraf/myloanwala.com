@@ -13,6 +13,8 @@ import { renderMarkdown } from "@/lib/markdown";
 import { PRODUCTS } from "@/lib/products";
 import { SITE, withBrand } from "@/lib/site";
 import { getBrand } from "@/lib/brand";
+import { breadcrumbJsonLd } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -48,7 +50,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title,
       description,
+      url: `${post.brand.url}/blog/${post.slug}`,
+      siteName: post.brand.name,
+      locale: "en_IN",
       type: "article",
+      modifiedTime: new Date(post.updatedAt).toISOString(),
+      section: post.category,
+      tags: post.tags,
       publishedTime: new Date(post.createdAt).toISOString(),
       images: post.coverImage ? [{ url: post.coverImage, alt: post.imageAlt || post.title }] : [],
     },
@@ -73,6 +81,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       <div className="container-x grid gap-10 pb-14 lg:grid-cols-[1fr_320px]">
         <article className="min-w-0">
+          <JsonLd data={breadcrumbJsonLd(post.brand, [{ name: "Blog", path: "/blog" }, { name: post.title, path: `/blog/${post.slug}` }])} />
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{

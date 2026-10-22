@@ -1,8 +1,10 @@
-import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
+import { pageMetadata } from "@/lib/seo";
 import { getBrand } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Terms of Use" };
+export function generateMetadata() {
+  return pageMetadata({ title: "Terms of Use", description: "Terms and conditions for using our loan comparison and facilitation services.", path: "/terms" });
+}
 
 export default async function TermsPage() {
   const SITE = await getBrand();

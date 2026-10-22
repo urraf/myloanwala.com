@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { BarChart3, CheckCircle2, ClipboardList, Users } from "lucide-react";
@@ -6,13 +5,15 @@ import ActionForm from "@/components/ActionForm";
 import { getPartner } from "@/lib/auth";
 import { partnerLogin, partnerRegister } from "@/lib/actions/partner";
 import { getBrand } from "@/lib/brand";
+import { pageMetadata } from "@/lib/seo";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const SITE = await getBrand();
-  return {
-    title: "Partner With Us — NBFC & DSA Partner Program",
-    description: `Join ${SITE.name} as an NBFC or DSA partner. Get loan leads and track applications in your own dashboard.`,
-  };
+export function generateMetadata() {
+  return pageMetadata({
+    title: "Partner With Us — NBFC & DSA Loan Partner Program",
+    description: "Join as an NBFC or DSA partner. Get quality home loan & LAP leads, submit customer applications and track every lead in your own dashboard.",
+    path: "/partner",
+    keywords: ["DSA partner", "loan DSA registration", "NBFC partnership", "become a loan agent"],
+  });
 }
 
 export default async function PartnerPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {

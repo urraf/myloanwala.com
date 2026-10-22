@@ -4,7 +4,8 @@ import { getBrand } from "@/lib/brand";
 export default async function robots(): Promise<MetadataRoute.Robots> {
   const brand = await getBrand();
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/admin", "/partner/dashboard"] },
+    rules: [{ userAgent: "*", allow: "/", disallow: ["/admin", "/partner/dashboard", "/api/"] }],
     sitemap: `${brand.url}/sitemap.xml`,
+    host: brand.url,
   };
 }

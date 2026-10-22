@@ -5,21 +5,45 @@ import { PRODUCTS } from "@/lib/products";
 import { SITE } from "@/lib/site";
 import { getBrand } from "@/lib/brand";
 
+/** One sitemap per domain (built from the visited domain). Blog posts are listed on the main domain only. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const brand = await getBrand();
-  const pages = ["", "/credit-score", "/apply", "/offers", "/emi-calculator", "/blog", "/about", "/contact", "/partner", "/privacy-policy", "/terms"];
+  const now = new Date();
+  type Freq = NonNullable<MetadataRoute.Sitemap[number]["changeFrequency"]>;
+  const page = (path: string, priority: number, changeFrequency: Freq) => ({ url: `${brand.url}${path}`, lastModified: now, changeFrequency, priority });
+
   const urls: MetadataRoute.Sitemap = [
-    ...pages.map((p) => ({ url: `${brand.url}${p}` })),
-    ...PRODUCTS.map((p) => ({ url: `${brand.url}/${p.slug}`, priority: 0.9 })),
+    page("", 1, "daily"),
+    // core products first
+    ...PRODUCTS.map((p, i) => page(`/${p.slug}`, i < 2 ? 0.95 : 0.85, "weekly")),
+    page("/credit-score", 0.9, "weekly"),
+    page("/apply", 0.9, "monthly"),
+    page("/offers", 0.85, "daily"),
+    page("/emi-calculator", 0.8, "monthly"),
+    page("/blog", 0.8, "daily"),
+    page("/partner", 0.6, "monthly"),
+    page("/about", 0.5, "yearly"),
+    page("/contact", 0.6, "yearly"),
+    page("/privacy-policy", 0.2, "yearly"),
+    page("/terms", 0.2, "yearly"),
   ];
-  // Blog posts are listed only on the main domain (other domains point Google there)
+
+  // Shared blog posts point Google to the main domain, so only list them there
   if (brand.domain !== SITE.domain) return urls;
   try {
     await connectDB();
-    const blogs = await Blog.find({ published: true }).select("slug updatedAt").sort({ createdAt: -1 }).limit(5000).lean();
-    urls.push(...blogs.map((b) => ({ url: `${brand.url}/blog/${b.slug}`, lastModified: b.updatedAt })));
+    const blogs = await Blog.find({ published: true }).select("slug updatedAt coverImage").sort({ createdAt: -1 }).limit(5000).lean();
+    urls.push(
+      ...blogs.map((b) => ({
+        url: `${brand.url}/blog/${b.slug}`,
+        lastModified: b.updatedAt,
+        changeFrequency: "monthly" as Freq,
+        priority: 0.7,
+        ...(b.coverImage ? { images: [b.coverImage.startsWith("http") ? b.coverImage : `${brand.url}${b.coverImage}`] } : {}),
+      }))
+    );
   } catch {
-    // DB unavailable at build time — static pages only
+    // database unavailable — pages only
   }
   return urls;
 }

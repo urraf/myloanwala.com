@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 import { CheckCircle2 } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import { getBrand } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "About Us" };
+export function generateMetadata() {
+  return pageMetadata({ title: "About Us — Trusted Home Loan & LAP Advisors", description: "Learn how we help Indians compare and get home loans, loans against property, personal and business loans from 30+ banks & NBFCs — free, transparent and expert-led.", path: "/about" });
+}
 
 export default async function AboutPage() {
   const SITE = await getBrand();

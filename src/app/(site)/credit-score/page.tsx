@@ -1,16 +1,18 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2, ChevronRight, CreditCard, FileSearch, Gauge, History, Layers, ShieldCheck } from "lucide-react";
 import LeadForm from "@/components/LeadForm";
 import Faq from "@/components/Faq";
 import { getBrand } from "@/lib/brand";
+import { breadcrumbJsonLd, faqJsonLd, pageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 
-export async function generateMetadata(): Promise<Metadata> {
-  const SITE = await getBrand();
-  return {
-    title: "Check CIBIL Score for FREE — Know Your Home Loan Eligibility",
-    description: `Check your CIBIL / credit score for free with ${SITE.name}. Understand your score, what affects it and how it impacts your home loan and loan against property eligibility.`,
-  };
+export function generateMetadata() {
+  return pageMetadata({
+    title: "Free CIBIL Score Check — Know Your Home Loan Eligibility",
+    description: "Check your CIBIL / credit score for free. Understand what your score means for home loan and loan against property approval and interest rates, and how to improve it.",
+    path: "/credit-score",
+    keywords: ["free CIBIL score check", "credit score check", "CIBIL score for home loan", "check CIBIL score online"],
+  });
 }
 
 const RANGES = [
@@ -62,6 +64,7 @@ export default async function CreditScorePage() {
   const SITE = await getBrand();
   return (
     <>
+      <JsonLd data={[breadcrumbJsonLd(SITE, [{ name: "Free CIBIL Score Check", path: "/credit-score" }]), faqJsonLd(FAQS(SITE.name))]} />
       {/* HERO */}
       <section className="bg-linear-to-b from-soft to-white">
         <div className="container-x py-4 text-xs text-muted">

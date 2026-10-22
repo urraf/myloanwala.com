@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 import EmiCalculator from "@/components/EmiCalculator";
 import Faq from "@/components/Faq";
 import { PRODUCTS } from "@/lib/products";
 
-export const metadata: Metadata = {
-  title: "Loan EMI Calculator — Personal, Home, Business Loan EMI",
-  description: "Calculate your monthly loan EMI, total interest and total payment instantly with our free EMI calculator.",
-};
+export function generateMetadata() {
+  return pageMetadata({ title: "EMI Calculator — Home Loan, LAP & Personal Loan EMI", description: "Free loan EMI calculator. Calculate your home loan, loan against property, personal or business loan EMI, total interest and repayment instantly.", path: "/emi-calculator", keywords: ["EMI calculator", "home loan EMI calculator", "loan EMI calculator", "LAP EMI calculator"] });
+}
 
 export default async function EmiPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
   const { type } = await searchParams;

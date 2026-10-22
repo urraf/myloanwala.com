@@ -1,10 +1,12 @@
-import type { Metadata } from "next";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { pageMetadata } from "@/lib/seo";
 import PageHeader from "@/components/PageHeader";
 import LeadForm from "@/components/LeadForm";
 import { getBrand } from "@/lib/brand";
 
-export const metadata: Metadata = { title: "Contact Us" };
+export function generateMetadata() {
+  return pageMetadata({ title: "Contact Us — Call or Visit Our Loan Experts", description: "Talk to our loan experts for home loan, loan against property and personal loan help. Call, WhatsApp, email or visit our office in Uttam Nagar, New Delhi.", path: "/contact", keywords: ["loan agent near me", "home loan consultant Delhi", "loan advisor Uttam Nagar"] });
+}
 
 export default async function ContactPage() {
   const SITE = await getBrand();

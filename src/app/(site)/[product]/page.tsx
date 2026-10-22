@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CheckCircle2, ChevronRight, FileText, UserCheck } from "lucide-react";
@@ -9,6 +8,8 @@ import ProductIcon from "@/components/ProductIcon";
 import { HOW_IT_WORKS, PRODUCTS, getProduct } from "@/lib/products";
 import { getOffers } from "@/lib/data";
 import { getBrand } from "@/lib/brand";
+import { breadcrumbJsonLd, faqJsonLd, pageMetadata } from "@/lib/seo";
+import JsonLd from "@/components/JsonLd";
 import { findBankLogo } from "@/lib/banks";
 
 type Props = { params: Promise<{ product: string }> };
@@ -18,14 +19,16 @@ export function generateStaticParams() {
   return PRODUCTS.map((p) => ({ product: p.slug }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const SITE = await getBrand();
+export async function generateMetadata({ params }: Props) {
   const p = getProduct((await params).product);
   if (!p) return {};
-  return {
-    title: `${p.name} — Compare Interest Rates from ${p.rate} & Apply Online`,
-    description: `Apply for ${p.name} up to ${p.maxAmount} at interest rates starting ${p.rate} p.a. Compare offers from top banks & NBFCs on ${SITE.name}.`,
-  };
+  const short = p.slug === "loan-against-property" ? "LAP" : p.name;
+  return pageMetadata({
+    title: `${p.name} at ${p.rate}* — Compare & Apply Online`,
+    description: `Get ${p.name} up to ${p.maxAmount} at interest rates from ${p.rate} p.a. Compare ${short} offers from 30+ banks & NBFCs, check eligibility, documents & EMI, and apply online.`,
+    path: `/${p.slug}`,
+    keywords: [p.name, `${p.name} interest rate`, `${p.name} eligibility`, `${p.name} documents`, `${short} EMI calculator`, `best ${p.name}`, `${p.name} in Delhi`],
+  });
 }
 
 function Table({ head, rows }: { head: string[]; rows: (string | React.ReactNode)[][] }) {
@@ -55,6 +58,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <>
+      <JsonLd data={[breadcrumbJsonLd(SITE, [{ name: p.name, path: `/${p.slug}` }]), faqJsonLd(p.faqs)]} />
       {/* HERO */}
       <section className="bg-linear-to-b from-soft to-white">
         <div className="container-x py-4 text-xs text-muted">

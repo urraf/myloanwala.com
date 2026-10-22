@@ -27,8 +27,10 @@ export default function HeroCarousel() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={s.image}
-                alt=""
+                alt={`${s.title} ${s.highlight}`}
                 loading={n === 0 ? "eager" : "lazy"}
+                fetchPriority={n === 0 ? "high" : "low"}
+                decoding="async"
                 className="absolute inset-y-0 right-0 h-full w-[68%] object-cover"
               />
               <span

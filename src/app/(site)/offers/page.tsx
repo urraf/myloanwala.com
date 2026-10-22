@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 import { OfferCard } from "@/components/Cards";
 import { getOffers } from "@/lib/data";
 import { PRODUCTS } from "@/lib/products";
 
-export const metadata: Metadata = {
-  title: "Best Loan Offers — Compare Interest Rates",
-  description: "Compare the latest loan offers and interest rates from top banks and NBFCs.",
-};
+export function generateMetadata() {
+  return pageMetadata({ title: "Best Loan Offers — Compare Home Loan & LAP Interest Rates", description: "Compare the latest home loan, loan against property, personal and business loan offers from SBI, HDFC, ICICI, Axis & more. See rates, loan amounts and fees in one place.", path: "/offers", keywords: ["home loan interest rates comparison", "best loan offers", "bank loan rates"] });
+}
 
 export default async function OffersPage({ searchParams }: { searchParams: Promise<{ type?: string; q?: string }> }) {
   const { type, q } = await searchParams;

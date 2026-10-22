@@ -13,6 +13,7 @@ import { TILE_SECTIONS, type Tile } from "@/lib/nav";
 import { PRODUCTS } from "@/lib/products";
 import { whatsappLink, type Brand } from "@/lib/site";
 import { getBrand } from "@/lib/brand";
+import { pageMetadata } from "@/lib/seo";
 
 /* ------------------------------------------------------------------ */
 /* Content — edit freely                                               */
@@ -128,6 +129,11 @@ const CARD_COLORS = [
   ["#0c3a5a", "#1c78b0"],
 ];
 
+export async function generateMetadata() {
+  const brand = await getBrand();
+  return pageMetadata({ title: brand.seoTitle, absoluteTitle: true, description: brand.seoDescription, path: "/" });
+}
+
 export default async function HomePage() {
   const SITE = await getBrand();
   const [offers, { blogs }] = await Promise.all([getOffers(), getBlogs({ limit: 3 })]);
@@ -142,13 +148,14 @@ export default async function HomePage() {
       {/* ================= HERO ================= */}
       <section className="container-x pt-4 sm:pt-10">
         <div className="grid items-start gap-8 lg:grid-cols-[1fr_460px] xl:grid-cols-[1fr_457px]">
-          <div className="hidden pt-4 lg:block">
-            <h1 className="font-serif text-[34px] leading-[1.3] text-[#333] xl:text-[36px]">
+          <div className="lg:pt-4">
+            {/* h1 stays readable to Google & screen readers on mobile (visually hidden there, like Paisabazaar) */}
+            <h1 className="sr-only font-serif text-[34px] leading-[1.3] text-[#333] lg:not-sr-only xl:text-[36px]">
               <span className="font-light">India&apos;s best platform for</span>
               <br />
               <span className="font-bold text-ink">Home Loan &amp; Loan Against Property</span>
             </h1>
-            <div className="mt-10 flex gap-10 xl:gap-14">
+            <div className="mt-10 hidden gap-10 lg:flex xl:gap-14">
               {[
                 ["house", "Lowest Home Loan", "rates from 7.35%*"],
                 ["stopwatch", "Quick, easy &", "hassle free"],

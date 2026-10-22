@@ -1,13 +1,12 @@
-import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
 import { BlogCard } from "@/components/Cards";
 import { getBlogs } from "@/lib/data";
 import { BLOG_CATEGORIES } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: "Blog — Loan Guides, Credit Score Tips & Personal Finance",
-  description: "Read the latest guides on personal loans, home loans, business loans, credit score and money management.",
-};
+export function generateMetadata() {
+  return pageMetadata({ title: "Blog — Home Loan Guides, CIBIL Tips & Loan News", description: "Simple guides on home loans, loan against property, CIBIL score, EMIs and the latest RBI & loan news for Indian borrowers.", path: "/blog", keywords: ["home loan tips", "CIBIL score tips", "loan news India"] });
+}
 
 const PER_PAGE = 12;
 
