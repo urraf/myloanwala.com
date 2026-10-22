@@ -10,10 +10,10 @@ export const SITE = {
   logoTagline: process.env.NEXT_PUBLIC_LOGO_TAGLINE || "LOAN HUA AASAN",
   botName: process.env.NEXT_PUBLIC_BOT_NAME || "Loan Mitra",
   tagline: "India's trusted platform for Loans & Offers",
-  phone: process.env.NEXT_PUBLIC_PHONE || "+91 98765 43210",
+  phone: process.env.NEXT_PUBLIC_PHONE || "+91 99537 10961",
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP || "", // defaults to phone
-  email: process.env.NEXT_PUBLIC_EMAIL || "support@myloanwala.com",
-  address: process.env.NEXT_PUBLIC_ADDRESS || "New Delhi, India",
+  email: process.env.NEXT_PUBLIC_EMAIL || "myloanwala050@gmail.com",
+  address: process.env.NEXT_PUBLIC_ADDRESS || "Plot No. 29, 3rd Floor, Bhagwati Garden, Shisha Godam Rd, Block B, Uttam Nagar, New Delhi, Delhi 110059",
   hours: process.env.NEXT_PUBLIC_HOURS || "Mon – Sat, 9:30 AM – 7:00 PM",
   url: process.env.SITE_URL || "http://localhost:3000",
 };
