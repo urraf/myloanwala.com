@@ -7,13 +7,17 @@ import { useBrand } from "./BrandProvider";
 export default function Logo({ light = false, href = "/" }: { light?: boolean; href?: string }) {
   const SITE = useBrand();
   return (
-    <Link href={href} className="inline-flex items-center gap-2 sm:gap-2.5" aria-label={`${SITE.name} home`}>
+    <Link href={href} className="inline-flex min-w-0 items-center gap-1.5 sm:gap-2.5" aria-label={`${SITE.name} home`}>
       {SITE.logoImage && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={SITE.logoImage} alt={SITE.name} className="h-10 w-10 shrink-0 object-contain sm:h-12 sm:w-12" />
+        <img
+          src={SITE.logoImage}
+          alt={SITE.name}
+          className={`h-9 w-9 shrink-0 object-contain sm:h-12 sm:w-12 ${light && SITE.logoTile ? "rounded-lg bg-white p-1" : ""}`}
+        />
       )}
       <span className="inline-flex flex-col items-start leading-none">
-        <span className="relative font-serif text-[21px] font-normal tracking-tight sm:text-[26px]">
+        <span className="relative whitespace-nowrap font-serif text-[17px] font-normal tracking-tight min-[400px]:text-[19px] sm:text-[26px]">
           <span className={light ? "text-white" : "text-[#1b3a8c]"}>{SITE.logoText1}</span>
           <span className={light ? "text-white" : "text-brand"}>{SITE.logoText2}</span>
           {!SITE.logoImage && (

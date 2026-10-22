@@ -241,7 +241,7 @@ export default async function HomePage() {
                   className="grid w-[88%] shrink-0 snap-start items-center gap-6 rounded-2xl border border-line bg-linear-to-b from-[#e7e9fc] to-white p-6 sm:w-[640px] sm:grid-cols-[220px_1fr] sm:p-10 lg:w-[795px] lg:grid-cols-[300px_1fr]"
                 >
                   {/* "card" visual */}
-                  <div className="mx-auto h-[200px] w-[130px] rotate-[-6deg] rounded-xl p-4 text-white shadow-[0_18px_30px_rgba(0,0,0,0.25)] sm:h-[270px] sm:w-[175px]" style={{ background: `linear-gradient(160deg, ${from}, ${to})` }}>
+                  <div className="mx-auto flex h-[200px] w-[130px] rotate-[-6deg] flex-col overflow-hidden rounded-xl p-4 text-white shadow-[0_18px_30px_rgba(0,0,0,0.25)] sm:h-[270px] sm:w-[175px]" style={{ background: `linear-gradient(160deg, ${from}, ${to})` }}>
                     {findBankLogo(o.lender) ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={findBankLogo(o.lender)} alt={o.lender} className="h-7 w-full rounded bg-white object-contain px-1.5 py-1" />
@@ -249,8 +249,8 @@ export default async function HomePage() {
                       <p className="text-[10px] font-semibold uppercase tracking-wide opacity-90">{o.lender}</p>
                     )}
                     <p className="mt-1 font-serif text-[10px] lowercase opacity-80">{SITE.name}</p>
-                    <div className="mt-8 h-7 w-9 rounded-md bg-linear-to-br from-[#f7d774] to-[#c9971c]" />
-                    <p className="mt-8 font-serif text-lg font-semibold leading-tight sm:mt-16 sm:text-xl">{o.loanType}</p>
+                    <div className="mt-5 h-7 w-9 shrink-0 rounded-md bg-linear-to-br from-[#f7d774] to-[#c9971c] sm:mt-8" />
+                    <p className="mt-auto break-words pt-3 font-serif text-[15px] font-semibold leading-tight sm:text-xl">{o.loanType}</p>
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold leading-snug text-ink sm:text-[26px]">{o.lender} {o.loanType}</h3>

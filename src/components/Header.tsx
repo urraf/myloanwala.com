@@ -33,7 +33,7 @@ export default function Header() {
 
       {/* Main bar */}
       <div className="border-b border-line">
-        <div className="container-x flex h-16 items-center justify-between gap-4 lg:h-[74px]">
+        <div className="container-x flex h-16 items-center justify-between gap-2 sm:gap-4 lg:h-[74px]">
           <div className="flex items-center gap-2 sm:gap-3">
             <button className="-ml-1 p-1 text-ink xl:hidden" onClick={() => setOpen(true)} aria-label="Menu">
               <Menu className="h-6 w-6" />
@@ -61,8 +61,8 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-3">
-            <a href={tel} className="text-ink lg:hidden" aria-label="Call us">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+            <a href={tel} className="text-ink max-[400px]:hidden lg:hidden" aria-label="Call us">
               <Headphones className="h-6 w-6" />
             </a>
             <Link
@@ -71,7 +71,7 @@ export default function Header() {
             >
               <Handshake className="h-4 w-4" /> Partner Login
             </Link>
-            <Link href="/apply" className="whitespace-nowrap rounded border border-brand px-3 py-1.5 text-sm font-medium text-brand hover:bg-tile sm:px-4 sm:text-[15px] lg:px-5 lg:py-2">
+            <Link href="/apply" className="whitespace-nowrap rounded border border-brand px-2.5 py-1.5 text-[13px] font-medium text-brand hover:bg-tile sm:px-4 sm:text-[15px] lg:px-5 lg:py-2">
               Apply Now
             </Link>
           </div>

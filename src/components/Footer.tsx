@@ -51,7 +51,7 @@ export default async function Footer() {
         </div>
       </details>
 
-      <div className="container-x grid gap-10 py-10 sm:grid-cols-2 lg:grid-cols-[200px_1fr_1fr_1.3fr_1.2fr] lg:py-12">
+      <div className="container-x grid gap-10 py-10 sm:grid-cols-2 lg:grid-cols-[240px_1fr_1fr_1.3fr_1.2fr] lg:py-12">
         <div><Logo light /></div>
         {columns.map((c) => (
           <div key={c.title}>
@@ -77,7 +77,7 @@ export default async function Footer() {
       </div>
 
       <div className="bg-[#292b3c]">
-        <div className="container-x flex flex-wrap gap-x-6 gap-y-2 py-3 text-[13px] lg:pl-[calc(200px+2.5rem+2rem)]">
+        <div className="container-x flex flex-wrap gap-x-6 gap-y-2 py-3 text-[13px] lg:pl-[calc(240px+2.5rem+2rem)]">
           <Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
           <Link href="/terms" className="hover:text-white">Terms of Use</Link>
           <Link href="/terms" className="hover:text-white">Disclaimer</Link>
@@ -86,7 +86,7 @@ export default async function Footer() {
         </div>
       </div>
 
-      <div className="container-x py-6 text-xs leading-relaxed text-[#8d90a0] lg:pl-[calc(200px+2.5rem+2rem)]">
+      <div className="container-x py-6 text-xs leading-relaxed text-[#8d90a0] lg:pl-[calc(240px+2.5rem+2rem)]">
         <p>
           <span className="text-[#c5c7d0]">Disclaimer:</span> {SITE.name} is a loan facilitation platform and does not lend
           money directly. Loans are sanctioned at the sole discretion of our partner banks / NBFCs. Interest rates shown are

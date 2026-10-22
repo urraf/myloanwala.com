@@ -8,6 +8,7 @@ export const SITE = {
   logoText1: process.env.NEXT_PUBLIC_LOGO_TEXT_1 || "myloan",
   logoText2: process.env.NEXT_PUBLIC_LOGO_TEXT_2 || "wala",
   logoTagline: process.env.NEXT_PUBLIC_LOGO_TAGLINE || "LOAN HUA AASAN",
+  logoTile: false, // true = show the logo on a white tile on dark backgrounds (footer)
   botName: process.env.NEXT_PUBLIC_BOT_NAME || "Loan Mitra",
   tagline: "India's trusted platform for Loans & Offers",
   phone: process.env.NEXT_PUBLIC_PHONE || "+91 99537 10961",
@@ -30,7 +31,8 @@ export const BRANDS: Brand[] = [
     ...SITE,
     name: "Best Home Loan",
     domain: "besthomeloanindia.com",
-    logoImage: "", // text logo with ₹ badge
+    logoImage: "/logo-bhl.png", // house + hand symbol (cleaned, transparent); full logo: /logo-bhl-full.png
+    logoTile: true,
     logoText1: "besthome",
     logoText2: "loan",
     phone: "+91 98182 50309",
