@@ -27,7 +27,6 @@ Brand colours live in `src/app/globals.css` (`--color-brand`, `--color-navy`, �
 
 Every new lead (website form, AI chat, partner) and every new partner registration is emailed to
 `LEAD_NOTIFY_EMAIL` (or, if empty, the business email `NEXT_PUBLIC_EMAIL`) once SMTP is configured.
-Check it any time with **Admin → Account → Send Test Email**.
 
 ## Fill a new database (`npm run seed`)
 
