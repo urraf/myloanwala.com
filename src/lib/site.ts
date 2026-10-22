@@ -47,6 +47,7 @@ export const BRANDS: Brand[] = [
     phone: "+91 98182 50309",
     whatsapp: "", // uses the phone number
     email: "infobesthomeloan191@gmail.com",
+    address: "RZ-111, Bajaj Enclave, Sector 15, New Delhi, Delhi 110078",
     url: "https://www.besthomeloanindia.com",
   },
 ];

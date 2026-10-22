@@ -48,7 +48,7 @@ ${products}
 
 ## Useful links
 Apply: ${SITE.url}/apply · EMI calculator: ${SITE.url}/emi-calculator · Offers: ${SITE.url}/offers · Blog: ${SITE.url}/blog
-NBFC/DSA partners: ${SITE.url}/partner · Contact: ${SITE.phone}, ${SITE.email} (${SITE.hours})`;
+NBFC/DSA partners: ${SITE.url}/partner · Contact: ${SITE.phone}, ${SITE.email} (${SITE.hours}) · Office: ${SITE.address}`;
 }
 
 const TOOLS = [
