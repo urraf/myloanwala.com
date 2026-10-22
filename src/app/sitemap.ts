@@ -31,8 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Shared blog posts point Google to the main domain, so only list them there
   if (brand.domain !== SITE.domain) return urls;
   try {
-    await connectDB();
-    const blogs = await Blog.find({ published: true }).select("slug updatedAt coverImage").sort({ createdAt: -1 }).limit(5000).lean();
+    const blogs = await publishedBlogs();
     urls.push(
       ...blogs.map((b) => ({
         url: `${brand.url}/blog/${b.slug}`,
@@ -43,7 +42,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       }))
     );
   } catch {
-    // database unavailable — pages only
+    // database slow/unavailable — pages only, so Google never gets an error
   }
   return urls;
+}
+
+type BlogRow = { slug: string; updatedAt: Date; coverImage?: string };
+const g = globalThis as unknown as { _sitemapBlogs?: { at: number; rows: BlogRow[] } };
+
+/** Published posts, cached 10 min and capped at 5s so a cold database can't make Googlebot time out. */
+async function publishedBlogs(): Promise<BlogRow[]> {
+  if (g._sitemapBlogs && Date.now() - g._sitemapBlogs.at < 10 * 60_000) return g._sitemapBlogs.rows;
+  const query = connectDB().then(() =>
+    Blog.find({ published: true }).select("slug updatedAt coverImage").sort({ createdAt: -1 }).limit(5000).lean<BlogRow[]>()
+  );
+  const timeout = new Promise<never>((_, reject) => setTimeout(() => reject(new Error("sitemap db timeout")), 5000));
+  try {
+    const rows = await Promise.race([query, timeout]);
+    g._sitemapBlogs = { at: Date.now(), rows };
+    return rows;
+  } catch (e) {
+    if (g._sitemapBlogs) return g._sitemapBlogs.rows; // stale is better than nothing
+    throw e;
+  }
 }
