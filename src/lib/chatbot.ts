@@ -2,15 +2,14 @@ import { connectDB } from "./db";
 import { Lead, Offer } from "./models";
 import { SAMPLE_OFFERS } from "./data";
 import { LOAN_TYPES, PRODUCTS } from "./products";
-import { SITE } from "./site";
+import { SITE, type Brand } from "./site";
 import { groqChat, type GroqMessage } from "./groq";
 import { notifyNewLead } from "./notify";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
-export const BOT_NAME = SITE.botName;
 
-function systemPrompt() {
+function systemPrompt(SITE: Brand) {
   // Kept compact — the free Groq plan has a small tokens-per-minute limit
   const products = PRODUCTS.map(
     (p) =>
@@ -18,7 +17,7 @@ function systemPrompt() {
       `Eligibility: ${p.eligibility.slice(0, 3).join("; ")}. Docs: ${p.documents.join("; ")}.`
   ).join("\n");
 
-  return `You are "${BOT_NAME}", the AI loan assistant of ${SITE.name} (${SITE.domain}), an Indian loan comparison & facilitation platform.
+  return `You are "${SITE.botName}", the AI loan assistant of ${SITE.name} (${SITE.domain}), an Indian loan comparison & facilitation platform.
 
 ## Your scope — VERY IMPORTANT
 Only help with: loans (personal, business, home, loan against property, gold, car), EMIs, interest rates, eligibility, documents,
@@ -85,7 +84,7 @@ const TOOLS = [
     type: "function",
     function: {
       name: "submit_loan_application",
-      description: `Submit a loan application so a ${SITE.name} expert calls the user. Only call after the user has confirmed their details.`,
+      description: `Submit a loan application so a loan expert calls the user. Only call after the user has confirmed their details.`,
       parameters: {
         type: "object",
         properties: {
@@ -103,7 +102,7 @@ const TOOLS = [
 
 const inr = (n: number) => "₹" + Math.round(n).toLocaleString("en-IN");
 
-async function runTool(name: string, args: Record<string, unknown>): Promise<{ result: unknown; leadCreated?: boolean }> {
+async function runTool(name: string, args: Record<string, unknown>, SITE: Brand): Promise<{ result: unknown; leadCreated?: boolean }> {
   if (name === "calculate_emi") {
     const p = Number(args.amount), n = Number(args.tenure_months), r = Number(args.annual_rate) / 1200;
     if (!(p > 0 && n > 0 && r >= 0)) return { result: { error: "Invalid inputs" } };
@@ -143,8 +142,9 @@ async function runTool(name: string, args: Record<string, unknown>): Promise<{ r
         amount: Number(args.amount) || 0,
         source: "website",
         notes: "Submitted via AI chat assistant",
+        site: SITE.domain,
       });
-      notifyNewLead(lead, `AI chat (${SITE.botName})`);
+      notifyNewLead(lead, `AI chat (${SITE.botName}) on ${SITE.domain}`);
     }
     return { result: { success: true, message: "Application submitted. A loan expert will call within working hours." }, leadCreated: true };
   }
@@ -167,9 +167,9 @@ function callGroq(messages: GroqMsg[], withTools: boolean) {
 }
 
 /** Runs the assistant (with up to 4 tool steps) and returns the reply text. */
-export async function chat(history: ChatMessage[]): Promise<{ reply: string; leadCreated?: boolean }> {
+export async function chat(history: ChatMessage[], brand: Brand = SITE): Promise<{ reply: string; leadCreated?: boolean }> {
   const messages: GroqMsg[] = [
-    { role: "system", content: systemPrompt() },
+    { role: "system", content: systemPrompt(brand) },
     ...history.slice(-8).map((m) => ({ role: m.role, content: m.content.slice(0, 1200) })),
   ];
   let leadCreated = false;
@@ -194,7 +194,7 @@ export async function chat(history: ChatMessage[]): Promise<{ reply: string; lea
         try {
           args = JSON.parse(call.function.arguments || "{}");
         } catch {}
-        const out = await runTool(call.function.name, args).catch((e) => ({ result: { error: (e as Error).message } }) as { result: unknown; leadCreated?: boolean });
+        const out = await runTool(call.function.name, args, brand).catch((e) => ({ result: { error: (e as Error).message } }) as { result: unknown; leadCreated?: boolean });
         if (out.leadCreated) leadCreated = true;
         messages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify(out.result) });
       }

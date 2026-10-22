@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
-import { SITE } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 
 export const metadata: Metadata = { title: "About Us" };
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const SITE = await getBrand();
   return (
     <>
       <PageHeader title={`About ${SITE.name}`} subtitle="Making loans simple, transparent and accessible for every Indian." />

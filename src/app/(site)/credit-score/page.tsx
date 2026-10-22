@@ -3,12 +3,15 @@ import Link from "next/link";
 import { CheckCircle2, ChevronRight, CreditCard, FileSearch, Gauge, History, Layers, ShieldCheck } from "lucide-react";
 import LeadForm from "@/components/LeadForm";
 import Faq from "@/components/Faq";
-import { SITE } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 
-export const metadata: Metadata = {
-  title: "Check CIBIL Score for FREE — Know Your Home Loan Eligibility",
-  description: `Check your CIBIL / credit score for free with ${SITE.name}. Understand your score, what affects it and how it impacts your home loan and loan against property eligibility.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const SITE = await getBrand();
+  return {
+    title: "Check CIBIL Score for FREE — Know Your Home Loan Eligibility",
+    description: `Check your CIBIL / credit score for free with ${SITE.name}. Understand your score, what affects it and how it impacts your home loan and loan against property eligibility.`,
+  };
+}
 
 const RANGES = [
   { range: "750 – 900", label: "Excellent", color: "#12a150", text: "Best chance of approval and the lowest home loan rates." },
@@ -24,10 +27,10 @@ const FACTORS = [
   { icon: FileSearch, title: "Loan enquiries", text: "Applying with many lenders in a short time can pull your score down." },
 ];
 
-const FAQS = [
+const FAQS = (name: string) => [
   { q: "Does checking my credit score reduce it?", a: "No. Checking your own score is a 'soft enquiry' and has no impact on your credit score." },
   { q: "What CIBIL score is needed for a home loan?", a: "Most banks prefer 750 or above for the best home loan rates. Some lenders approve home loans and loans against property for scores between 650 and 750, usually at a slightly higher rate." },
-  { q: "Is the credit score check really free?", a: `Yes. ${SITE.name} does not charge anything. You are also entitled to one free full credit report every year from each credit bureau, as per RBI rules.` },
+  { q: "Is the credit score check really free?", a: `Yes. ${name} does not charge anything. You are also entitled to one free full credit report every year from each credit bureau, as per RBI rules.` },
   { q: "How can I improve a low CIBIL score?", a: "Pay all dues on time, keep credit card usage below 30%, avoid multiple loan applications and check your report for errors. Most people see improvement within 3–6 months." },
 ];
 
@@ -55,7 +58,8 @@ function ScoreGauge() {
   );
 }
 
-export default function CreditScorePage() {
+export default async function CreditScorePage() {
+  const SITE = await getBrand();
   return (
     <>
       {/* HERO */}
@@ -158,7 +162,7 @@ export default function CreditScorePage() {
 
         <section>
           <h2 className="section-title">Frequently Asked Questions</h2>
-          <div className="mt-6"><Faq items={FAQS} /></div>
+          <div className="mt-6"><Faq items={FAQS(SITE.name)} /></div>
           <p className="mt-6 flex items-center gap-2 text-xs text-muted">
             <ShieldCheck className="h-4 w-4 text-success" /> Your details are shared only with your consent and used only to help you with loans.
           </p>

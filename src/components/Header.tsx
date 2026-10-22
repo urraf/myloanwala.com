@@ -5,12 +5,14 @@ import { useState } from "react";
 import { ChevronDown, Headphones, Handshake, Menu, MessageCircle, PhoneCall, X } from "lucide-react";
 import Logo from "./Logo";
 import { NAV_MENUS } from "@/lib/nav";
-import { SITE, whatsappLink } from "@/lib/site";
+import { whatsappLink } from "@/lib/site";
+import { useBrand } from "./BrandProvider";
 
-const tel = `tel:${SITE.phone.replace(/\s/g, "")}`;
-const whatsapp = whatsappLink();
 
 export default function Header() {
+  const SITE = useBrand();
+  const tel = `tel:${SITE.phone.replace(/\s/g, "")}`;
+  const whatsapp = whatsappLink(SITE);
   const [open, setOpen] = useState(false);
   const [section, setSection] = useState<string | null>("Loans");
 

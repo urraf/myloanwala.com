@@ -5,7 +5,7 @@ import { requireAdmin } from "@/lib/auth";
 import { LEAD_STATUS, Lead, Partner } from "@/lib/models";
 import { deleteLead, updateLead } from "@/lib/actions/admin";
 import { LEAD_TYPES } from "@/lib/products";
-import { formatINR } from "@/lib/site";
+import { BRANDS, formatINR } from "@/lib/site";
 import { leadFilter, type LeadQuery } from "@/lib/lead-filter";
 
 type SP = LeadQuery;
@@ -35,7 +35,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
         <a href={`/admin/leads/export?${qs}`} className="btn-outline"><Download className="h-4 w-4" /> Export CSV</a>
       </div>
 
-      <form className="card grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-[1fr_180px_200px_auto]">
+      <form className="card grid gap-3 p-4 sm:grid-cols-2 lg:grid-cols-[1fr_160px_180px_190px_auto]">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
           <input name="q" defaultValue={sp.q} placeholder="Search name, phone, city…" className="input pl-9" />
@@ -43,6 +43,10 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
         <select name="status" defaultValue={sp.status || ""} className="input capitalize">
           <option value="">All statuses</option>
           {LEAD_STATUS.map((s) => <option key={s} value={s}>{s.replace("-", " ")}</option>)}
+        </select>
+        <select name="site" defaultValue={sp.site || ""} className="input">
+          <option value="">All websites</option>
+          {BRANDS.map((b) => <option key={b.domain} value={b.domain}>{b.domain}</option>)}
         </select>
         <select name="type" defaultValue={sp.type || ""} className="input">
           <option value="">All loan types</option>
@@ -89,6 +93,7 @@ export default async function LeadsPage({ searchParams }: { searchParams: Promis
                     </td>
                     <td className="px-4 py-3 text-xs">
                       {l.source === "partner" ? <span>Partner<br /><span className="text-muted">{by?.company}</span></span> : "Website"}
+                      {l.site && <span className="mt-1 block w-max rounded bg-tile px-1.5 py-0.5 text-[10px] font-medium text-brand">{l.site}</span>}
                     </td>
                     <td className="px-4 py-3 text-xs text-muted">
                       {new Date(l.createdAt).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" })}

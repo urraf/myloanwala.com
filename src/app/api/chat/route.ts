@@ -1,5 +1,5 @@
 import { chat, type ChatMessage } from "@/lib/chatbot";
-import { SITE } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 
 // Simple in-memory rate limit: 25 messages per 10 minutes per visitor IP
 const WINDOW_MS = 10 * 60_000;
@@ -16,6 +16,7 @@ function limited(ip: string) {
 }
 
 export async function POST(req: Request) {
+  const SITE = await getBrand();
   const fallback = `Sorry, I'm unavailable right now. Please call us at ${SITE.phone} or apply at ${SITE.url}/apply.`;
   if (!process.env.GROQ_API_KEY) return Response.json({ reply: fallback });
 
@@ -34,7 +35,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    return Response.json(await chat(messages));
+    return Response.json(await chat(messages, SITE));
   } catch (e) {
     console.error("[chat]", (e as Error).message);
     return Response.json({ reply: fallback });

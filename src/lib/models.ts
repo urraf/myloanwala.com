@@ -63,6 +63,7 @@ const leadSchema = new Schema(
     // Partner (NBFC / DSA) this lead is assigned to by admin
     assignedTo: { type: Schema.Types.ObjectId, ref: "Partner" },
     demo: { type: Boolean, default: false }, // sample data — removable from the dashboard
+    site: { type: String, default: "" }, // which website (domain) the lead came from
   },
   { timestamps: true }
 );

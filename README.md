@@ -15,6 +15,14 @@ Loan comparison website (Paisabazaar-style) with an admin panel, an NBFC/DSA par
 
 Every form on the website saves a **lead** in MongoDB. The admin assigns leads to partners, and partners update the status.
 
+## Two brands, one app (myloanwala.com + besthomeloanindia.com)
+
+One deployment serves both domains. The brand (name, logo, chatbot name, page text, Google title, share image,
+favicon) is picked from the domain the visitor opens — see `BRANDS` in `src/lib/site.ts`.
+Database, admin panel, offers, partners and blogs are shared. Every lead records its `site` (filter in Admin → Leads).
+Blog posts tell Google the main domain (myloanwala.com) has the original, so the two sites don't compete.
+Add both domains to the same Render service. Test locally with `http://besthomeloanindia.localhost:3000`.
+
 ## Rebrand for a client (no code changes)
 
 Everything brand-related comes from `.env` (see the **BRAND** and **CONTACT** sections in `.env.example`):

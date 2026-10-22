@@ -18,9 +18,39 @@ export const SITE = {
   url: process.env.SITE_URL || "http://localhost:3000",
 };
 
-/** WhatsApp chat link (uses NEXT_PUBLIC_WHATSAPP, or the phone number). */
-export const whatsappLink = (text = "Hi, I need help with a loan") =>
-  `https://wa.me/${(SITE.whatsapp || SITE.phone).replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
+export type Brand = typeof SITE;
+
+/**
+ * One app, several domains: each domain shows its own brand (name, logo, chatbot name…).
+ * Design, database, admin and blogs are shared. SITE (above) is the main brand.
+ */
+export const BRANDS: Brand[] = [
+  SITE,
+  {
+    ...SITE,
+    name: "Best Home Loan",
+    domain: "besthomeloanindia.com",
+    logoImage: "", // text logo with ₹ badge
+    logoText1: "besthome",
+    logoText2: "loan",
+    url: "https://www.besthomeloanindia.com",
+  },
+];
+
+/** Picks the brand for a request host (e.g. "www.besthomeloanindia.com"). Unknown hosts → main brand. */
+export function brandForHost(host?: string | null): Brand {
+  const h = (host || "").toLowerCase().split(":")[0];
+  // match the domain itself, any subdomain, or "<name>.localhost" for local testing
+  return BRANDS.find((b) => h === b.domain || h.endsWith(`.${b.domain}`) || h.startsWith(`${b.domain.split(".")[0]}.`)) || SITE;
+}
+
+/** WhatsApp chat link for a brand (uses its WhatsApp number, or the phone number). */
+export const whatsappLink = (brand: Brand = SITE, text = "Hi, I need help with a loan") =>
+  `https://wa.me/${(brand.whatsapp || brand.phone).replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;
+
+/** Article text is written with the main brand name — show the visitor's brand instead. */
+export const withBrand = (text: string, brand: Brand) =>
+  brand.name === SITE.name || !text ? text : text.replaceAll(SITE.name, brand.name);
 
 export const formatINR = (n: number) =>
   "₹" + Math.round(n).toLocaleString("en-IN");

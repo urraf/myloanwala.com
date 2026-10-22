@@ -6,7 +6,7 @@ import Link from "next/link";
 import { CheckCircle2, Loader2, ShieldCheck } from "lucide-react";
 import { submitLead, type FormState } from "@/lib/actions/public";
 import { LOAN_TYPES } from "@/lib/products";
-import { SITE } from "@/lib/site";
+import { useBrand } from "./BrandProvider";
 
 /**
  * Two-step loan application (like Paisabazaar):
@@ -25,6 +25,7 @@ export default function LeadForm({
   kind?: "loan" | "credit";
 }) {
   const credit = kind === "credit";
+  const SITE = useBrand();
   const [state, action, pending] = useActionState<FormState, FormData>(submitLead, {});
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");

@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import LeadForm from "@/components/LeadForm";
-import { SITE } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 
 export const metadata: Metadata = { title: "Contact Us" };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const SITE = await getBrand();
   const items = [
     { icon: Phone, label: "Call us", value: SITE.phone, href: `tel:${SITE.phone.replace(/\s/g, "")}` },
     { icon: Mail, label: "Email", value: SITE.email, href: `mailto:${SITE.email}` },

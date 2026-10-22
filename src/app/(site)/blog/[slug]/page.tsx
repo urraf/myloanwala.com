@@ -11,7 +11,8 @@ import { Blog } from "@/lib/models";
 import { getBlogs } from "@/lib/data";
 import { renderMarkdown } from "@/lib/markdown";
 import { PRODUCTS } from "@/lib/products";
-import { SITE } from "@/lib/site";
+import { SITE, withBrand } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -25,8 +26,16 @@ const getPost = cache(async (slug: string) => {
   }
 });
 
+/** Post with the brand name in the text switched to the visitor's brand. */
+const getBrandedPost = cache(async (slug: string) => {
+  const [post, brand] = await Promise.all([getPost(slug), getBrand()]);
+  if (!post) return null;
+  const b = (t?: string) => withBrand(t || "", brand);
+  return { ...post, brand, title: b(post.title), excerpt: b(post.excerpt), content: b(post.content), metaTitle: b(post.metaTitle), metaDescription: b(post.metaDescription), imageAlt: b(post.imageAlt) };
+});
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await getPost((await params).slug);
+  const post = await getBrandedPost((await params).slug);
   if (!post) return {};
   const title = post.metaTitle || post.title;
   const description = post.metaDescription || post.excerpt;
@@ -34,7 +43,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: { absolute: title },
     description,
     keywords: post.tags,
-    alternates: { canonical: `/blog/${post.slug}` },
+    // Shared articles: tell Google the main domain has the original, so the two sites don't compete
+    alternates: { canonical: post.brand.domain === SITE.domain ? `/blog/${post.slug}` : `https://www.${SITE.domain}/blog/${post.slug}` },
     openGraph: {
       title,
       description,
@@ -47,7 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogPostPage({ params }: Props) {
-  const post = await getPost((await params).slug);
+  const post = await getBrandedPost((await params).slug);
   if (!post) notFound();
   const { blogs: related } = await getBlogs({ category: post.category, limit: 4 });
 
@@ -71,13 +81,13 @@ export default async function BlogPostPage({ params }: Props) {
                 "@type": "BlogPosting",
                 headline: post.title,
                 description: post.metaDescription || post.excerpt,
-                image: post.coverImage ? [post.coverImage.startsWith("http") ? post.coverImage : `${SITE.url}${post.coverImage}`] : undefined,
+                image: post.coverImage ? [post.coverImage.startsWith("http") ? post.coverImage : `${post.brand.url}${post.coverImage}`] : undefined,
                 datePublished: new Date(post.createdAt).toISOString(),
                 dateModified: new Date(post.updatedAt).toISOString(),
                 keywords: post.tags?.join(", "),
-                author: { "@type": "Organization", name: SITE.name },
-                publisher: { "@type": "Organization", name: SITE.name },
-                mainEntityOfPage: `${SITE.url}/blog/${post.slug}`,
+                author: { "@type": "Organization", name: post.brand.name },
+                publisher: { "@type": "Organization", name: post.brand.name },
+                mainEntityOfPage: `${post.brand.url}/blog/${post.slug}`,
               }).replace(/</g, "\\u003c"),
             }}
           />

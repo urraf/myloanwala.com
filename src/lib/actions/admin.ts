@@ -10,10 +10,11 @@ import {
 } from "@/lib/auth";
 import { sendMail } from "@/lib/mail";
 import { verifyCaptcha } from "@/lib/captcha";
+import { getBrand } from "@/lib/brand";
 import { aiSeoForContent, aiWriteDraft, findImage, generateBlogPost, pickHeadline, type BlogDraft } from "@/lib/ai-blog";
 import { SAMPLE_OFFERS } from "@/lib/data";
 import { LOAN_TYPES } from "@/lib/products";
-import { SITE, slugify } from "@/lib/site";
+import { slugify } from "@/lib/site";
 import type { FormState } from "./public";
 
 const str = (fd: FormData, k: string) => String(fd.get(k) || "").trim();
@@ -51,8 +52,8 @@ export async function adminSendOtp(_: FormState, fd: FormData): Promise<FormStat
     console.log(`[admin-otp] OTP for ${admin.email}: ${otp}`);
     await sendMail(
       admin.email,
-      `${SITE.name} admin — your password reset OTP`,
-      `<p>Your OTP to reset the ${SITE.name} admin password is:</p>
+      `${(await getBrand()).name} admin — your password reset OTP`,
+      `<p>Your OTP to reset the ${(await getBrand()).name} admin password is:</p>
        <p style="font-size:28px;font-weight:bold;letter-spacing:6px;color:#0066ff">${otp}</p>
        <p>This OTP is valid for 10 minutes. If you didn't request this, you can ignore this email.</p>`
     ).catch((e) => console.error("[admin-otp] email failed:", e));

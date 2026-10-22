@@ -4,9 +4,10 @@ import Logo from "./Logo";
 import { PRODUCTS } from "@/lib/products";
 import { NAV_MENUS } from "@/lib/nav";
 import { getBlogs } from "@/lib/data";
-import { SITE } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 
 export default async function Footer() {
+  const SITE = await getBrand();
   const { blogs } = await getBlogs({ limit: 6 });
   const learn = blogs.length
     ? blogs.map((b) => ({ label: b.title, href: `/blog/${b.slug}` }))

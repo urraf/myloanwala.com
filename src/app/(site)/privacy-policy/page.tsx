@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
-import { SITE } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 
 export const metadata: Metadata = { title: "Privacy Policy" };
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
+  const SITE = await getBrand();
   return (
     <>
       <PageHeader title="Privacy Policy" />

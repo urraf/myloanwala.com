@@ -3,15 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, Phone, RotateCcw, Send, X } from "lucide-react";
 import { renderMarkdown } from "@/lib/markdown";
-import { SITE, whatsappLink } from "@/lib/site";
+import { whatsappLink, type Brand } from "@/lib/site";
+import { useBrand } from "./BrandProvider";
 
 type Msg = { role: "user" | "assistant"; content: string };
 
 const STORE_KEY = "mlw-chat";
-const WELCOME: Msg = {
+const welcomeFor = (brand: Brand): Msg => ({
   role: "assistant",
-  content: `Namaste! 👋 I'm **${SITE.botName}**, ${SITE.name}'s AI loan assistant.\n\nI can help you compare loan offers, calculate EMI, check eligibility and even apply — ask me anything about loans!`,
-};
+  content: `Namaste! 👋 I'm **${brand.botName}**, ${brand.name}'s AI loan assistant.\n\nI can help you compare loan offers, calculate EMI, check eligibility and even apply — ask me anything about loans!`,
+});
 const QUICK = [
   "Check my personal loan eligibility",
   "Calculate EMI for ₹5 Lakh",
@@ -21,7 +22,7 @@ const QUICK = [
   "I want to apply for a loan",
 ];
 
-function loadHistory(): Msg[] {
+function loadHistory(WELCOME: Msg): Msg[] {
   if (typeof window === "undefined") return [WELCOME];
   try {
     const saved = JSON.parse(sessionStorage.getItem(STORE_KEY) || "null");
@@ -32,9 +33,11 @@ function loadHistory(): Msg[] {
 }
 
 export default function ChatWidget() {
+  const SITE = useBrand();
+  const WELCOME = welcomeFor(SITE);
   const [open, setOpen] = useState(false);
   const [teaser, setTeaser] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>(loadHistory);
+  const [messages, setMessages] = useState<Msg[]>(() => loadHistory(WELCOME));
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
@@ -78,7 +81,7 @@ export default function ChatWidget() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next.filter((m) => m !== WELCOME).slice(-12) }),
+        body: JSON.stringify({ messages: next.filter((m) => m.content !== WELCOME.content).slice(-12) }),
       });
       const data = await res.json();
       setMessages([...next, { role: "assistant", content: data.reply || "Sorry, please try again." }]);
@@ -91,7 +94,7 @@ export default function ChatWidget() {
 
   const reset = () => setMessages([WELCOME]);
   const tel = `tel:${SITE.phone.replace(/\s/g, "")}`;
-  const wa = whatsappLink();
+  const wa = whatsappLink(SITE);
 
   return (
     <>

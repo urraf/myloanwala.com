@@ -6,7 +6,8 @@ import { CheckCircle2, Circle, ImageIcon, Loader2, Sparkles, Wand2 } from "lucid
 import { keepValuesOnSubmit } from "@/lib/form";
 import { aiDraftBlog, aiFillSeo, aiFindImage, saveBlog } from "@/lib/actions/admin";
 import { renderMarkdown } from "@/lib/markdown";
-import { BLOG_CATEGORIES, SITE, slugify } from "@/lib/site";
+import { BLOG_CATEGORIES, slugify } from "@/lib/site";
+import { useBrand } from "./BrandProvider";
 
 export type BlogFormData = {
   id?: string;
@@ -24,7 +25,6 @@ export type BlogFormData = {
   published?: boolean;
 };
 
-const DOMAIN = SITE.domain;
 
 function Counter({ value, min, max }: { value: string; min: number; max: number }) {
   const n = value.length;
@@ -33,6 +33,8 @@ function Counter({ value, min, max }: { value: string; min: number; max: number 
 }
 
 export default function BlogEditor({ blog = {} }: { blog?: BlogFormData }) {
+  const SITE = useBrand();
+  const DOMAIN = SITE.domain;
   const [state, action, pending] = useActionState(saveBlog, {});
   const [f, setF] = useState({
     title: blog.title || "",

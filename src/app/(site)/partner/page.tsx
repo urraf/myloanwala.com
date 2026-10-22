@@ -5,14 +5,18 @@ import { BarChart3, CheckCircle2, ClipboardList, Users } from "lucide-react";
 import ActionForm from "@/components/ActionForm";
 import { getPartner } from "@/lib/auth";
 import { partnerLogin, partnerRegister } from "@/lib/actions/partner";
-import { SITE } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 
-export const metadata: Metadata = {
-  title: "Partner With Us — NBFC & DSA Partner Program",
-  description: `Join ${SITE.name} as an NBFC or DSA partner. Get loan leads and track applications in your own dashboard.`,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const SITE = await getBrand();
+  return {
+    title: "Partner With Us — NBFC & DSA Partner Program",
+    description: `Join ${SITE.name} as an NBFC or DSA partner. Get loan leads and track applications in your own dashboard.`,
+  };
+}
 
 export default async function PartnerPage({ searchParams }: { searchParams: Promise<{ tab?: string }> }) {
+  const SITE = await getBrand();
   if (await getPartner().catch(() => null)) redirect("/partner/dashboard");
   const register = (await searchParams).tab === "register";
 

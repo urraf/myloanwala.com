@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
-import { SITE } from "@/lib/site";
+import { useBrand } from "./BrandProvider";
 
 /** Logo: badge image (NEXT_PUBLIC_LOGO_IMAGE, default /logo.png) + two-colour wordmark + tagline badge — set in .env. */
 export default function Logo({ light = false, href = "/" }: { light?: boolean; href?: string }) {
+  const SITE = useBrand();
   return (
     <Link href={href} className="inline-flex items-center gap-2 sm:gap-2.5" aria-label={`${SITE.name} home`}>
       {SITE.logoImage && (

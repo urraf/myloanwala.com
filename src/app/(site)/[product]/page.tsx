@@ -8,7 +8,7 @@ import Faq from "@/components/Faq";
 import ProductIcon from "@/components/ProductIcon";
 import { HOW_IT_WORKS, PRODUCTS, getProduct } from "@/lib/products";
 import { getOffers } from "@/lib/data";
-import { SITE } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 import { findBankLogo } from "@/lib/banks";
 
 type Props = { params: Promise<{ product: string }> };
@@ -19,6 +19,7 @@ export function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const SITE = await getBrand();
   const p = getProduct((await params).product);
   if (!p) return {};
   return {
@@ -47,6 +48,7 @@ function Table({ head, rows }: { head: string[]; rows: (string | React.ReactNode
 }
 
 export default async function ProductPage({ params }: Props) {
+  const SITE = await getBrand();
   const p = getProduct((await params).product);
   if (!p) notFound();
   const offers = await getOffers(p.name);

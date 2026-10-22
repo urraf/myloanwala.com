@@ -8,13 +8,13 @@ const row = (k: string, v: unknown) =>
   v ? `<tr><td style="padding:6px 12px;color:#6b7280">${k}</td><td style="padding:6px 12px;font-weight:600">${String(v).replace(/</g, "&lt;")}</td></tr>` : "";
 
 /** Fire-and-forget email to the business owner when a new lead arrives. Never throws. */
-export function notifyNewLead(lead: { name: string; phone: string; loanType: string; city?: string; amount?: number; monthlyIncome?: number; employment?: string; email?: string }, source: string) {
+export function notifyNewLead(lead: { name: string; phone: string; loanType: string; city?: string; amount?: number; monthlyIncome?: number; employment?: string; email?: string; site?: string }, source: string) {
   if (!to() || !smtpConfigured()) return;
   const html = `<div style="font-family:Arial,sans-serif;max-width:520px">
     <h2 style="color:#0066ff;margin:0 0 4px">New ${lead.loanType} lead</h2>
     <p style="margin:0 0 12px;color:#6b7280">Source: ${source}</p>
     <table style="border-collapse:collapse;background:#f2f7ff;border-radius:8px;width:100%">
-      ${row("Name", lead.name)}${row("Mobile", lead.phone)}${row("Email", lead.email)}${row("City", lead.city)}
+      ${row("Website", lead.site)}${row("Name", lead.name)}${row("Mobile", lead.phone)}${row("Email", lead.email)}${row("City", lead.city)}
       ${row("Loan amount", lead.amount ? formatINR(lead.amount) : "")}${row("Monthly income", lead.monthlyIncome ? formatINR(lead.monthlyIncome) : "")}${row("Employment", lead.employment)}
     </table>
     <p><a href="${SITE.url}/admin/leads" style="background:#0066ff;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;display:inline-block">Open Leads Dashboard</a></p>

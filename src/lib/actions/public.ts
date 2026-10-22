@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/db";
 import { Lead } from "@/lib/models";
 import { LEAD_TYPES } from "@/lib/products";
 import { notifyNewLead } from "@/lib/notify";
+import { getBrand } from "@/lib/brand";
 
 export type FormState = { ok?: boolean; error?: string; message?: string };
 
@@ -37,8 +38,9 @@ export async function submitLead(_: FormState, fd: FormData): Promise<FormState>
         monthlyIncome: Number(fd.get("monthlyIncome")) || 0,
         employment: String(fd.get("employment") || ""),
         source: "website",
+        site: (await getBrand()).domain,
       });
-      notifyNewLead(lead, "Website form");
+      notifyNewLead(lead, `Website form on ${lead.site}`);
     }
     return { ok: true };
   } catch (e) {

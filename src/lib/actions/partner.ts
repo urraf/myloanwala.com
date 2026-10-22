@@ -9,6 +9,7 @@ import { LOAN_TYPES } from "@/lib/products";
 import { notifyNewLead, notifyNewPartner } from "@/lib/notify";
 import type { FormState } from "./public";
 import { verifyCaptcha } from "@/lib/captcha";
+import { getBrand } from "@/lib/brand";
 
 const str = (fd: FormData, k: string) => String(fd.get(k) || "").trim();
 
@@ -76,6 +77,7 @@ export async function partnerAddLead(_: FormState, fd: FormData): Promise<FormSt
     notes: str(fd, "notes"),
     source: "partner",
     createdBy: partner._id,
+    site: (await getBrand()).domain,
   });
   notifyNewLead(lead, `Partner: ${partner.company} (${partner.type})`);
   revalidatePath("/partner/dashboard");

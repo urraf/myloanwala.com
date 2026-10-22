@@ -11,23 +11,24 @@ import { getBlogs, getOffers } from "@/lib/data";
 import { BlogCard } from "@/components/Cards";
 import { TILE_SECTIONS, type Tile } from "@/lib/nav";
 import { PRODUCTS } from "@/lib/products";
-import { SITE, whatsappLink } from "@/lib/site";
+import { whatsappLink, type Brand } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 
 /* ------------------------------------------------------------------ */
 /* Content — edit freely                                               */
 /* ------------------------------------------------------------------ */
 
-const STORIES = [
+const STORIES = (name: string) => [
   { quote: "Bought our first home in Noida — the team got us a home loan at a lower rate than our bank offered.", name: "Rajeev & Kavita Sharma", city: "Noida", loan: "Home Loan", image: "/hero/home-loan.webp" },
-  { quote: `Got ₹45 Lakh against my shop property to expand my business. ${SITE.name} handled everything.`, name: "Harish Saini", city: "New Delhi", loan: "Loan Against Property", image: "/hero/property.webp" },
+  { quote: `Got ₹45 Lakh against my shop property to expand my business. ${name} handled everything.`, name: "Harish Saini", city: "New Delhi", loan: "Loan Against Property", image: "/hero/property.webp" },
   { quote: "Transferred my home loan balance and my EMI dropped by over ₹4,000 a month.", name: "Dr. Brahmanand Dubey", city: "Gurgaon", loan: "Home Loan Transfer", image: "/blog/home-loan.webp" },
   { quote: "Quick business loan for my store before Diwali — no collateral, very smooth process.", name: "Pawan Agarwal", city: "Lucknow", loan: "Business Loan", image: "/hero/business.jpg" },
 ];
 
-const REVIEWS = [
-  { title: "Home loan approved in 7 days", text: `We were buying our first flat and were confused about which bank to choose. The ${SITE.name} advisor compared offers from five banks, helped with the property papers and our home loan was sanctioned within a week at a great rate.`, name: "Rahul Mehta", date: "28-Sep-2026" },
+const REVIEWS = (name: string) => [
+  { title: "Home loan approved in 7 days", text: `We were buying our first flat and were confused about which bank to choose. The ${name} advisor compared offers from five banks, helped with the property papers and our home loan was sanctioned within a week at a great rate.`, name: "Rahul Mehta", date: "28-Sep-2026" },
   { title: "Best rate on Loan Against Property", text: "I needed funds for my factory expansion and pledged my commercial property. The team got me a high loan amount at a lower interest rate than I expected, with a long tenure. Very professional and transparent.", name: "Suresh Patil", date: "19-Sep-2026" },
-  { title: "Saved lakhs with balance transfer", text: `I transferred my existing home loan through ${SITE.name} and my EMI reduced noticeably. The advisor explained every charge clearly and there were no hidden surprises.`, name: "Amit Patel", date: "07-Sep-2026" },
+  { title: "Saved lakhs with balance transfer", text: `I transferred my existing home loan through ${name} and my EMI reduced noticeably. The advisor explained every charge clearly and there were no hidden surprises.`, name: "Amit Patel", date: "07-Sep-2026" },
   { title: "Got my CIBIL score checked for free", text: "I wasn't sure if I would get a home loan. They checked my CIBIL score, told me exactly what to improve, and three months later my home loan was approved.", name: "Sneha Iyer", date: "30-Aug-2026" },
   { title: "Quick personal loan too", text: "Needed money for my sister's wedding. Got a personal loan in two days with very simple documentation. Polite and helpful team.", name: "Mohd. Imran", date: "21-Aug-2026" },
 ];
@@ -76,12 +77,12 @@ function TileGrid({ tiles }: { tiles: Tile[] }) {
   );
 }
 
-function PhoneMockup() {
+function PhoneMockup({ brand }: { brand: Brand }) {
   return (
     <div className="relative mx-auto h-[300px] w-[230px] sm:h-[400px] sm:w-[300px]">
       {/* back phone */}
       <div className="absolute left-0 top-16 h-[320px] w-[150px] -rotate-6 rounded-[28px] border-[7px] border-[#1c1d1f] bg-white p-3 shadow-xl sm:w-[180px]">
-        <p className="font-serif text-xs text-[#1b3a8c]">{SITE.logoText1}<span className="text-brand">{SITE.logoText2}</span></p>
+        <p className="font-serif text-xs text-[#1b3a8c]">{brand.logoText1}<span className="text-brand">{brand.logoText2}</span></p>
         <div className="mt-3 rounded-lg bg-tile p-2">
           <p className="text-[8px] text-muted">LAP offer</p>
           <p className="text-sm font-bold text-navy">₹75,00,000</p>
@@ -128,6 +129,7 @@ const CARD_COLORS = [
 ];
 
 export default async function HomePage() {
+  const SITE = await getBrand();
   const [offers, { blogs }] = await Promise.all([getOffers(), getBlogs({ limit: 3 })]);
   // Core products first: best 4 Home Loan + best 4 Loan Against Property offers
   const core = [...offers.filter((o) => o.loanType === "Home Loan").slice(0, 4), ...offers.filter((o) => o.loanType === "Loan Against Property").slice(0, 4)];
@@ -178,7 +180,7 @@ export default async function HomePage() {
       <section className="container-x py-10 sm:py-14">
         <div className="grid overflow-hidden rounded-2xl border border-[#bcd3ff] bg-tile lg:grid-cols-2">
           <div className="order-2 h-[280px] overflow-hidden pt-8 sm:h-[380px] lg:order-1 lg:h-auto lg:min-h-[420px]">
-            <PhoneMockup />
+            <PhoneMockup brand={SITE} />
           </div>
           <div className="order-1 p-6 sm:p-10 lg:order-2 lg:py-12 lg:pl-4">
             <h2 className="font-serif text-2xl font-semibold text-ink sm:text-[28px]">Get Instant Loan Offers</h2>
@@ -207,7 +209,7 @@ export default async function HomePage() {
                   <BadgeCheck className="h-7 w-7" />
                   <span className="leading-tight"><span className="block text-[10px] uppercase text-white/80">Apply online</span><span className="text-lg font-semibold">Check Offers</span></span>
                 </Link>
-                <a href={whatsappLink()} target="_blank" rel="noopener" className="flex items-center gap-3 rounded-lg bg-black px-4 py-2.5 text-white hover:bg-[#222]">
+                <a href={whatsappLink(SITE)} target="_blank" rel="noopener" className="flex items-center gap-3 rounded-lg bg-black px-4 py-2.5 text-white hover:bg-[#222]">
                   <MessageCircle className="h-7 w-7 text-[#25d366]" />
                   <span className="leading-tight"><span className="block text-[10px] uppercase text-white/80">Chat with us on</span><span className="text-lg font-semibold">WhatsApp</span></span>
                 </a>
@@ -314,7 +316,7 @@ export default async function HomePage() {
           </div>
           <div className="min-w-0 rounded-xl bg-white p-3 sm:p-4">
             <Carousel>
-              {STORIES.map((s) => (
+              {STORIES(SITE.name).map((s) => (
                 <figure key={s.name} className="w-[240px] shrink-0 snap-start overflow-hidden rounded-lg border border-line sm:w-[268px]">
                   <div className="relative h-[160px] overflow-hidden p-3">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -343,7 +345,7 @@ export default async function HomePage() {
       <section className="container-x pb-14 sm:pb-16">
         <h2 className="font-serif text-2xl font-semibold text-ink sm:text-[28px]">What our customers say</h2>
         <Carousel className="mt-6">
-          {REVIEWS.map((r) => (
+          {REVIEWS(SITE.name).map((r) => (
             <figure key={r.name} className="relative flex w-[86%] shrink-0 snap-start flex-col overflow-hidden rounded-lg border border-[#cfe0ff] bg-white p-6 sm:w-[380px]">
               <span className="pointer-events-none absolute -top-6 right-4 font-serif text-[120px] leading-none text-[#d9e6ff]">”</span>
               <h3 className="relative text-[17px] font-semibold text-ink">{r.title}</h3>

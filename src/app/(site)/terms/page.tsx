@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import PageHeader from "@/components/PageHeader";
-import { SITE } from "@/lib/site";
+import { getBrand } from "@/lib/brand";
 
 export const metadata: Metadata = { title: "Terms of Use" };
 
-export default function TermsPage() {
+export default async function TermsPage() {
+  const SITE = await getBrand();
   return (
     <>
       <PageHeader title="Terms of Use" />
