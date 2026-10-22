@@ -33,6 +33,9 @@ export const BRANDS: Brand[] = [
     logoImage: "", // text logo with ₹ badge
     logoText1: "besthome",
     logoText2: "loan",
+    phone: "+91 98182 50309",
+    whatsapp: "", // uses the phone number
+    email: "infobesthomeloan191@gmail.com",
     url: "https://www.besthomeloanindia.com",
   },
 ];
