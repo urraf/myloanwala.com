@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Poppins, Roboto_Serif } from "next/font/google";
 import { getBrand } from "@/lib/brand";
 import { BrandProvider } from "@/components/BrandProvider";
+import NavigationProgress from "@/components/NavigationProgress";
+import { Suspense } from "react";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -38,6 +40,9 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en" className={`${poppins.variable} ${robotoSerif.variable}`}>
       <body className="min-h-screen font-sans">
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
         <BrandProvider brand={brand}>{children}</BrandProvider>
       </body>
     </html>
