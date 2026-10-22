@@ -64,6 +64,8 @@ Floating robot button on every public page. Uses Groq (`GROQ_API_KEY`; optional 
 
 ## AI blog automation (no cron job needed)
 
+**Latest topics:** with *Write about latest news* on (Admin → AI Automation), each post explains a fresh Indian loan/RBI headline from Google News (free, no key) — never the same news twice, with a source line at the end. When there's no fresh news it uses the topic list.
+
 The scheduler runs **inside the app** (`src/instrumentation.ts` → `src/lib/scheduler.ts`). It checks every 5 minutes and publishes a new post when the interval set in **Admin → AI Automation** has passed (default: every 1 hour).
 
 - Needs `GROQ_API_KEY` (writes the post — the best available Groq model is chosen automatically, with fallback if one is rate-limited)  — **no image key needed**: cover photos come from Openverse

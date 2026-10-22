@@ -23,6 +23,7 @@ export async function groqChat(body: Record<string, unknown>, preferred?: string
     const res = await fetch(GROQ_URL, {
       method: "POST",
       headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      signal: AbortSignal.timeout(90_000),
       body: JSON.stringify({
         model,
         ...(model.startsWith("openai/gpt-oss") ? { reasoning_effort: "low" } : {}),

@@ -77,6 +77,7 @@ async function pexels(query: string): Promise<FoundImage | null> {
   try {
     const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&orientation=landscape&per_page=15`, {
       headers: { Authorization: key },
+      signal: AbortSignal.timeout(8000),
     });
     if (!res.ok) return null;
     const { photos } = await res.json();
@@ -94,7 +95,7 @@ async function openverse(query: string, category: string): Promise<FoundImage | 
   try {
     await connectDB();
     const params = new URLSearchParams({ q: query, license: "cc0,pdm", source: "rawpixel", aspect_ratio: "wide", mature: "false", page_size: "20" });
-    const res = await fetch(`https://api.openverse.org/v1/images/?${params}`, { headers: { "User-Agent": UA } });
+    const res = await fetch(`https://api.openverse.org/v1/images/?${params}`, { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(8000) });
     if (!res.ok) return null;
     const { results } = (await res.json()) as { results: OVResult[] };
     const terms = CATEGORY_TERMS[category] || CATEGORY_TERMS["Personal Finance"];
@@ -129,7 +130,7 @@ export async function findImage(query: string, category = "Personal Finance"): P
     ...(CATEGORY_QUERIES[category] || CATEGORY_QUERIES["Personal Finance"]),
   ].filter((x, i, a) => x && a.indexOf(x) === i);
 
-  for (const term of queries.slice(0, 5)) {
+  for (const term of queries.slice(0, 3)) { // max 3 searches keeps post creation fast
     const found = (await pexels(term)) || (await openverse(term, category));
     if (found) return found;
   }

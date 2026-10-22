@@ -36,6 +36,13 @@ export default async function AutomationPage() {
               </span>
             </label>
             <label className="flex items-center gap-3 rounded-xl border border-line p-4">
+              <input type="checkbox" name="useLatestNews" defaultChecked={s.useLatestNews !== false} className="h-5 w-5 accent-brand" />
+              <span>
+                <span className="block font-medium">Write about latest news</span>
+                <span className="block text-xs text-body">Picks this week&apos;s home loan, RBI &amp; loan news from Google News and explains it for borrowers. Uses the topics below when there&apos;s no fresh news.</span>
+              </span>
+            </label>
+            <label className="flex items-center gap-3 rounded-xl border border-line p-4">
               <input type="checkbox" name="autoPublish" defaultChecked={s.autoPublish !== false} className="h-5 w-5 accent-brand" />
               <span>
                 <span className="block font-medium">Publish automatically</span>
@@ -72,7 +79,7 @@ export default async function AutomationPage() {
             <h2 className="flex items-center gap-2 font-semibold"><Sparkles className="h-5 w-5 text-brand" /> Write a post now</h2>
             <p className="mb-4 mt-1 text-xs text-muted">Takes about 10–30 seconds.</p>
             <ActionForm action={generateBlogNow} submitLabel="Generate with AI">
-              <div><label className="label">Topic (optional)</label><input name="topic" className="input" placeholder="e.g. How to improve CIBIL score fast" /></div>
+              <div><label className="label">Topic (optional — leave empty for latest news)</label><input name="topic" className="input" placeholder="e.g. How to improve CIBIL score fast" /></div>
               <label className="flex items-center gap-2 text-sm">
                 <input type="checkbox" name="publish" defaultChecked className="h-4 w-4 accent-brand" /> Publish immediately
               </label>

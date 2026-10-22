@@ -83,6 +83,10 @@ const blogSchema = new Schema(
     metaTitle: { type: String, default: "" },
     metaDescription: { type: String, default: "" },
     imageAlt: { type: String, default: "" },
+    // set when the post was written from a news headline (prevents writing about the same news twice)
+    newsTitle: { type: String, default: "" },
+    newsSource: { type: String, default: "" },
+    newsUrl: { type: String, default: "" },
     published: { type: Boolean, default: true },
     aiGenerated: { type: Boolean, default: false },
   },
@@ -124,6 +128,7 @@ const settingsSchema = new Schema(
     key: { type: String, default: "main", unique: true },
     autoBlogEnabled: { type: Boolean, default: false },
     autoPublish: { type: Boolean, default: true }, // false = AI posts are saved as drafts for review
+    useLatestNews: { type: Boolean, default: true }, // write about the latest loan news headlines
     intervalHours: { type: Number, default: 1 },
     topics: { type: [String], default: [] },
     lastRunAt: Date,

@@ -149,7 +149,7 @@ export default function BlogEditor({ blog = {} }: { blog?: BlogFormData }) {
             onChange={(e) => setTopic(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), writeWithAI())}
             className="input bg-white"
-            placeholder="e.g. How to get a personal loan with low CIBIL score"
+            placeholder="Type a topic — or leave empty to write about today's loan news"
           />
           <button type="button" onClick={writeWithAI} disabled={!!busy} className="btn shrink-0 bg-[#7b3fe4] text-white hover:bg-[#6a2fd4]">
             {busy === "draft" ? <><Loader2 className="h-4 w-4 animate-spin" /> Writing… (20-40 sec)</> : <><Wand2 className="h-4 w-4" /> Generate Full Blog</>}

@@ -10,7 +10,7 @@ import {
 } from "@/lib/auth";
 import { sendMail } from "@/lib/mail";
 import { verifyCaptcha } from "@/lib/captcha";
-import { aiSeoForContent, aiWriteDraft, findImage, generateBlogPost, type BlogDraft } from "@/lib/ai-blog";
+import { aiSeoForContent, aiWriteDraft, findImage, generateBlogPost, pickHeadline, type BlogDraft } from "@/lib/ai-blog";
 import { SAMPLE_OFFERS } from "@/lib/data";
 import { LOAN_TYPES } from "@/lib/products";
 import { SITE, slugify } from "@/lib/site";
@@ -290,10 +290,14 @@ type AIResult<T> = { ok: true; data: T } | { ok: false; error: string };
 
 export async function aiDraftBlog(topic: string): Promise<AIResult<BlogDraft>> {
   await requireAdmin();
-  if (!topic.trim()) return { ok: false, error: "Enter a topic first" };
   try {
     const recent = await Blog.find().sort({ createdAt: -1 }).limit(30).select("title").lean();
-    return { ok: true, data: await aiWriteDraft(topic, recent.map((r) => r.title)) };
+    // Empty topic → write about today's loan news
+    const news = topic.trim() ? undefined : await pickHeadline();
+    if (!topic.trim() && !news) return { ok: false, error: "No fresh loan news found right now — please type a topic." };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { news: _used, ...draft } = await aiWriteDraft(topic || "latest loan news", recent.map((r) => r.title), news);
+    return { ok: true, data: draft };
   } catch (e) {
     return { ok: false, error: (e as Error).message };
   }
@@ -341,6 +345,7 @@ export async function saveAutomation(_: FormState, fd: FormData): Promise<FormSt
     {
       autoBlogEnabled: fd.get("autoBlogEnabled") === "on",
       autoPublish: fd.get("autoPublish") === "on",
+      useLatestNews: fd.get("useLatestNews") === "on",
       intervalHours: Math.min(168, Math.max(1, Number(fd.get("intervalHours")) || 1)),
       topics,
     }

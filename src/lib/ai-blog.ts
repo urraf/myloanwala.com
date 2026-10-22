@@ -3,6 +3,7 @@ import { Blog, getSettings } from "./models";
 import { BLOG_CATEGORIES, SITE, slugify } from "./site";
 import { groqChat } from "./groq";
 import { findImage } from "./images";
+import { latestHeadlines, type Headline } from "./news";
 
 export { findImage };
 
@@ -72,7 +73,7 @@ function cleanDraft(r: Partial<AIResult>): AIResult {
 }
 
 /** AI writes a complete post (content + all SEO fields + image). Nothing is saved. */
-export async function aiWriteDraft(topic: string, avoidTitles: string[] = []): Promise<BlogDraft> {
+export async function aiWriteDraft(topic: string, avoidTitles: string[] = [], news?: Headline): Promise<BlogDraft & { news?: Headline }> {
   const today = new Date().toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" });
   const system = `You are a senior finance content writer and SEO expert for ${SITE.name}, an Indian loan comparison website.
 Write helpful, accurate, SEO-optimised blog posts for Indian readers in simple English.
@@ -85,14 +86,26 @@ Respond ONLY with a JSON object with these keys:
 "title" (catchy H1 headline, under 70 characters),
 "content" (the full article in Markdown, 900-1200 words, using ## and ### headings, bullet lists, one simple table if useful, a short FAQ section at the end, and a closing line inviting readers to compare loan offers on ${SITE.name}. Use the main keyword naturally in the first paragraph and in at least one heading. Do NOT repeat the title as a heading),
 ${SEO_RULES}`;
-  const user = `Today is ${today}. Write a fresh blog post on: "${topic}".
+  const avoid = `Avoid these titles we already published: ${avoidTitles.slice(0, 30).map((t) => `"${t}"`).join(", ") || "none"}.`;
+  const user = news
+    ? `Today is ${today}. Write a timely blog post explaining this LATEST NEWS for Indian borrowers:
+HEADLINE: "${news.title}" (reported by ${news.source || "the media"} on ${news.date.toDateString()}).
+RULES FOR NEWS POSTS: You only know the headline — do NOT invent figures, dates, names, quotes or details that are not in it.
+Explain in general terms what this kind of change means for home loan / loan against property / loan borrowers, who is affected,
+and what practical steps readers should take. Mention it is based on recent reports and readers should check the latest details with their lender.
+${avoid}`
+    : `Today is ${today}. Write a fresh blog post on: "${topic}".
 Pick a specific, useful angle people search for in India.
-Avoid these titles we already published: ${avoidTitles.slice(0, 30).map((t) => `"${t}"`).join(", ") || "none"}.`;
+${avoid}`;
 
   const r = cleanDraft(await groqJSON<AIResult>(system, user));
   if (!r.title || !r.content) throw new Error("AI returned an incomplete post. Please try again.");
   const image = await findImage(r.imageQuery, r.category);
-  return { ...r, coverImage: image.url, imageCredit: image.credit };
+  if (news) {
+    const source = news.link ? `[${news.source || "news reports"}](${news.link})` : news.source || "news reports";
+    r.content += `\n\n---\n*Source: based on recent news reported by ${source} on ${news.date.toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" })}. Details may change — please confirm the latest terms with your lender.*`;
+  }
+  return { ...r, coverImage: image.url, imageCredit: image.credit, news };
 }
 
 /** For posts written by hand: AI fills slug, keywords, meta title/description, excerpt, category, image alt. */
@@ -113,7 +126,20 @@ async function uniqueSlug(base: string) {
   return slug;
 }
 
-/** Automation: AI writes a post on a random topic and saves it. */
+/** Newest loan headline we haven't written about yet (random among the 3 newest for variety). */
+export async function pickHeadline(): Promise<Headline | undefined> {
+  try {
+    await connectDB();
+    const all = await latestHeadlines();
+    const done = new Set((await Blog.find({ newsTitle: { $in: all.map((h) => h.title) } }).select("newsTitle").lean()).map((b) => b.newsTitle));
+    const list = all.filter((h) => !done.has(h.title)); // never write about the same news twice
+    return list.slice(0, 3)[Math.floor(Math.random() * Math.min(3, list.length))];
+  } catch {
+    return undefined; // news unavailable → fall back to normal topics
+  }
+}
+
+/** Automation: AI writes a post about the latest news (or a random topic) and saves it. */
 export async function generateBlogPost(opts: { topic?: string; publish?: boolean } = {}) {
   await connectDB();
   const settings = await getSettings();
@@ -121,9 +147,14 @@ export async function generateBlogPost(opts: { topic?: string; publish?: boolean
   const topic = opts.topic?.trim() || topics[Math.floor(Math.random() * topics.length)];
   const recent = await Blog.find().sort({ createdAt: -1 }).limit(30).select("title").lean();
 
-  const d = await aiWriteDraft(topic, recent.map((r) => r.title));
+  // No topic given → write about the latest loan news (if enabled and available)
+  let news: Headline | undefined;
+  if (!opts.topic?.trim() && settings.useLatestNews !== false) news = await pickHeadline();
+
+  const { news: used, ...d } = await aiWriteDraft(topic, recent.map((r) => r.title), news);
   return Blog.create({
     ...d,
+    ...(used ? { newsTitle: used.title, newsSource: used.source, newsUrl: used.link } : {}),
     slug: await uniqueSlug(d.slug || d.title),
     published: opts.publish ?? true,
     aiGenerated: true,
