@@ -6,7 +6,7 @@
  *
  * Database name comes from the URI path (defaults to "myloanwala").
  */
-import { MongoClient } from "mongodb";
+import { MongoClient, type AnyBulkWriteOperation, type Document } from "mongodb";
 
 const FROM = process.env.FROM_URI;
 const TO = process.env.TO_URI;
@@ -29,7 +29,7 @@ for (const { name, type } of await from.listCollections().toArray()) {
   const d = to.collection(name);
 
   // documents (upsert by _id, in batches)
-  let batch: Parameters<typeof d.bulkWrite>[0] = [];
+  let batch: AnyBulkWriteOperation<Document>[] = [];
   let copied = 0;
   for await (const doc of s.find()) {
     batch.push({ replaceOne: { filter: { _id: doc._id }, replacement: doc, upsert: true } });
