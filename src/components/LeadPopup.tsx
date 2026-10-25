@@ -1,31 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import { X } from "lucide-react";
 import LeadForm from "./LeadForm";
 
 // Pages that already show the form — no popup there
 const SKIP = ["/apply", "/contact", "/credit-score", "/partner"];
 
-/** "Check your loan offers" popup a few seconds after the first page load (once per browser session). */
+/** "Check your loan offers" popup 3s after every page load — first visit and every refresh. */
 export default function LeadPopup() {
-  const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
+  // Runs once per full page load (the layout stays mounted while navigating inside the site)
   useEffect(() => {
-    if (SKIP.some((p) => pathname.startsWith(p))) return;
-    try {
-      if (sessionStorage.getItem("mlw-lead-popup")) return;
-    } catch {}
-    const t = setTimeout(() => {
-      setOpen(true);
-      try {
-        sessionStorage.setItem("mlw-lead-popup", "1");
-      } catch {}
-    }, 3000);
+    if (SKIP.some((p) => window.location.pathname.startsWith(p))) return;
+    const t = setTimeout(() => setOpen(true), 3000);
     return () => clearTimeout(t);
-  }, [pathname]);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
