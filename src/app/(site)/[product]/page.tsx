@@ -34,7 +34,7 @@ export async function generateMetadata({ params }: Props) {
 function Table({ head, rows }: { head: string[]; rows: (string | React.ReactNode)[][] }) {
   return (
     <div className="overflow-x-auto rounded-2xl border border-line">
-      <table className="w-full min-w-[480px] text-left text-sm">
+      <table className="w-full min-w-[560px] text-left text-sm">
         <thead className="bg-soft text-ink">
           <tr>{head.map((h) => <th key={h} className="px-4 py-3 font-semibold">{h}</th>)}</tr>
         </thead>
@@ -130,14 +130,14 @@ export default async function ProductPage({ params }: Props) {
               <Table
                 head={["Lender", "Interest Rate", "Loan Amount", "Tenure", "Processing Fee", ""]}
                 rows={offers.map((o) => [
-                  <span key="l" className="flex items-center gap-3">
+                  <span key="l" className="flex min-w-[110px] flex-col items-start gap-1 sm:flex-row sm:items-center sm:gap-3">
                     {findBankLogo(o.lender) && (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={findBankLogo(o.lender)} alt="" className="h-8 w-20 object-contain" />
+                      <img src={findBankLogo(o.lender)} alt={o.lender} className="h-8 w-20 shrink-0 object-contain object-left" />
                     )}
-                    {o.lender}
+                    <span className="text-xs sm:text-sm">{o.lender}</span>
                   </span>,
-                  <b key="r" className="text-navy">{o.interestRate}</b>,
+                  <b key="r" className="whitespace-nowrap text-navy">{o.interestRate}</b>,
                   o.maxAmount || "—",
                   o.tenure || "—",
                   o.processingFee || "—",

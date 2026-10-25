@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronDown, Headphones, Handshake, Menu, MessageCircle, PhoneCall, X } from "lucide-react";
+import { ChevronDown, Handshake, Menu, MessageCircle, PhoneCall, X } from "lucide-react";
 import Logo from "./Logo";
 import { NAV_MENUS } from "@/lib/nav";
 import { whatsappLink } from "@/lib/site";
@@ -61,9 +61,9 @@ export default function Header() {
             ))}
           </nav>
 
-          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-            <a href={tel} className="text-ink max-[400px]:hidden lg:hidden" aria-label="Call us">
-              <Headphones className="h-6 w-6" />
+          <div className="flex shrink-0 items-center gap-1.5 min-[380px]:gap-2 sm:gap-3">
+            <a href={tel} className="grid h-8 w-8 place-items-center rounded-full bg-brand text-white sm:h-9 sm:w-9 lg:hidden" aria-label={`Call ${SITE.phone}`}>
+              <PhoneCall className="h-4 w-4" />
             </a>
             <Link
               href="/partner"
@@ -72,7 +72,7 @@ export default function Header() {
               <Handshake className="h-4 w-4" /> Partner Login
             </Link>
             <Link href="/apply" className="whitespace-nowrap rounded border border-brand px-2.5 py-1.5 text-[13px] font-medium text-brand hover:bg-tile sm:px-4 sm:text-[15px] lg:px-5 lg:py-2">
-              Apply Now
+              Apply<span className="max-[379px]:hidden"> Now</span>
             </Link>
           </div>
         </div>
