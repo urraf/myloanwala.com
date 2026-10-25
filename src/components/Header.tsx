@@ -62,12 +62,17 @@ export default function Header() {
           </nav>
 
           <div className="flex shrink-0 items-center gap-1.5 min-[380px]:gap-2 sm:gap-3">
-            <a href={tel} className="grid h-8 w-8 place-items-center rounded-full bg-brand text-white sm:h-9 sm:w-9 lg:hidden" aria-label={`Call ${SITE.phone}`}>
+            <a
+              href={tel}
+              className="flex h-8 w-8 items-center justify-center gap-1.5 rounded-full bg-brand text-white hover:bg-brand-dark sm:h-9 sm:w-9 lg:h-auto lg:w-auto lg:whitespace-nowrap lg:rounded lg:border lg:border-brand lg:px-5 lg:py-2 lg:text-[15px] lg:font-medium"
+              aria-label={`Call ${SITE.phone}`}
+            >
               <PhoneCall className="h-4 w-4" />
+              <span className="hidden lg:inline">Call Us</span>
             </a>
             <Link
               href="/partner"
-              className="hidden items-center gap-1.5 whitespace-nowrap rounded border border-brand px-3 py-1.5 text-[13px] font-medium text-brand hover:bg-tile sm:flex xl:hidden 2xl:flex"
+              className="hidden items-center gap-1.5 whitespace-nowrap rounded border border-brand px-3 py-1.5 text-[13px] font-medium text-brand hover:bg-tile sm:flex xl:hidden"
             >
               <Handshake className="h-4 w-4" /> Partner Login
             </Link>

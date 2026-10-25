@@ -106,9 +106,10 @@ export default function ChatWidget() {
             target="_blank"
             rel="noopener"
             aria-label="Chat on WhatsApp"
-            className="mr-1 grid h-14 w-14 place-items-center rounded-full border-4 border-white bg-[#25D366] text-white shadow-[0_6px_20px_rgba(37,211,102,0.45)] transition hover:scale-105"
+            className="relative mr-1 grid h-14 w-14 place-items-center rounded-full border-4 border-white bg-[#25D366] text-white shadow-[0_6px_20px_rgba(37,211,102,0.45)] transition hover:scale-105"
           >
-            <WhatsAppIcon className="h-7 w-7" />
+            <span className="absolute inset-0 rounded-full bg-[#25D366]/40 motion-safe:animate-ping [animation-duration:2s]" />
+            <WhatsAppIcon className="relative h-7 w-7 motion-safe:animate-wiggle" />
           </a>
           <div className="flex items-end gap-3">
           {teaser && (

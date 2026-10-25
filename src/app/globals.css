@@ -18,6 +18,16 @@
   --color-tile: #f2f7ff;
   --color-footer: #1c1d2e;
   --color-pink: #d6246e;
+
+  /* WhatsApp button: short shake every few seconds */
+  --animate-wiggle: wiggle 3.5s ease-in-out infinite;
+  @keyframes wiggle {
+    0%, 76%, 100% { transform: rotate(0) scale(1); }
+    80% { transform: rotate(-16deg) scale(1.1); }
+    84% { transform: rotate(14deg) scale(1.1); }
+    88% { transform: rotate(-10deg) scale(1.1); }
+    92% { transform: rotate(6deg) scale(1.05); }
+  }
 }
 
 html {
