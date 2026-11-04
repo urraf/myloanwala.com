@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ChevronDown, Handshake, Menu, MessageCircle, PhoneCall, X } from "lucide-react";
 import Logo from "./Logo";
 import { NAV_MENUS } from "@/lib/nav";
-import { whatsappLink } from "@/lib/site";
+import { SHOW_WHATSAPP, whatsappLink } from "@/lib/site";
 import { useBrand } from "./BrandProvider";
 
 
@@ -24,10 +24,14 @@ export default function Header() {
           <a href={tel} className="flex items-center gap-1.5 hover:underline">
             <PhoneCall className="h-4 w-4" /> Talk to Expert
           </a>
-          <span className="h-4 w-px bg-line" />
-          <a href={whatsapp} target="_blank" rel="noopener" className="flex items-center gap-1.5 hover:underline">
-            <MessageCircle className="h-4 w-4" /> Apply on WhatsApp
-          </a>
+          {SHOW_WHATSAPP && (
+            <>
+              <span className="h-4 w-px bg-line" />
+              <a href={whatsapp} target="_blank" rel="noopener" className="flex items-center gap-1.5 hover:underline">
+                <MessageCircle className="h-4 w-4" /> Apply on WhatsApp
+              </a>
+            </>
+          )}
         </div>
       </div>
 

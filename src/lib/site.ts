@@ -59,6 +59,9 @@ export function brandForHost(host?: string | null): Brand {
   return BRANDS.find((b) => h === b.domain || h.endsWith(`.${b.domain}`) || h.startsWith(`${b.domain.split(".")[0]}.`)) || SITE;
 }
 
+/** WhatsApp buttons on both domains — turned off for now on client request; set to true to bring them back. */
+export const SHOW_WHATSAPP = false;
+
 /** WhatsApp chat link for a brand (uses its WhatsApp number, or the phone number). */
 export const whatsappLink = (brand: Brand = SITE, text = "Hi, I need help with a loan") =>
   `https://wa.me/${(brand.whatsapp || brand.phone).replace(/\D/g, "")}?text=${encodeURIComponent(text)}`;

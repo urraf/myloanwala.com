@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { MessageCircle, Phone, RotateCcw, Send, X } from "lucide-react";
 import { renderMarkdown } from "@/lib/markdown";
-import { whatsappLink, type Brand } from "@/lib/site";
+import { SHOW_WHATSAPP, whatsappLink, type Brand } from "@/lib/site";
 import { useBrand } from "./BrandProvider";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -101,6 +101,7 @@ export default function ChatWidget() {
       {/* Floating button + teaser */}
       {!open && (
         <div className="fixed bottom-5 right-4 z-50 flex flex-col items-end gap-3 sm:right-5">
+          {SHOW_WHATSAPP && (
           <a
             href={wa}
             target="_blank"
@@ -111,6 +112,7 @@ export default function ChatWidget() {
             <span className="absolute inset-0 rounded-full bg-[#25D366]/40 motion-safe:animate-ping [animation-duration:2s]" />
             <WhatsAppIcon className="relative h-7 w-7 motion-safe:animate-wiggle" />
           </a>
+          )}
           <div className="flex items-end gap-3">
           {teaser && (
             <div className="relative mb-2 max-w-[220px] rounded-2xl rounded-br-sm bg-white p-3 text-sm text-ink shadow-[0_6px_24px_rgba(0,0,0,0.15)]">
@@ -151,7 +153,7 @@ export default function ChatWidget() {
               </p>
             </div>
             <a href={tel} className="rounded-lg p-2 hover:bg-white/15" title="Call an expert" aria-label="Call"><Phone className="h-4 w-4" /></a>
-            <a href={wa} target="_blank" rel="noopener" className="rounded-lg p-2 hover:bg-white/15" title="WhatsApp" aria-label="WhatsApp"><MessageCircle className="h-4 w-4" /></a>
+            {SHOW_WHATSAPP && <a href={wa} target="_blank" rel="noopener" className="rounded-lg p-2 hover:bg-white/15" title="WhatsApp" aria-label="WhatsApp"><MessageCircle className="h-4 w-4" /></a>}
             <button onClick={reset} className="rounded-lg p-2 hover:bg-white/15" title="New chat" aria-label="New chat"><RotateCcw className="h-4 w-4" /></button>
             <button onClick={() => setOpen(false)} className="rounded-lg p-2 hover:bg-white/15" aria-label="Close chat"><X className="h-5 w-5" /></button>
           </div>

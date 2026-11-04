@@ -11,7 +11,7 @@ import { getBlogs, getOffers } from "@/lib/data";
 import { BlogCard } from "@/components/Cards";
 import { TILE_SECTIONS, type Tile } from "@/lib/nav";
 import { PRODUCTS } from "@/lib/products";
-import { whatsappLink, type Brand } from "@/lib/site";
+import { SHOW_WHATSAPP, whatsappLink, type Brand } from "@/lib/site";
 import { getBrand } from "@/lib/brand";
 import { pageMetadata } from "@/lib/seo";
 
@@ -216,10 +216,12 @@ export default async function HomePage() {
                   <BadgeCheck className="h-7 w-7" />
                   <span className="leading-tight"><span className="block text-[10px] uppercase text-white/80">Apply online</span><span className="text-lg font-semibold">Check Offers</span></span>
                 </Link>
+                {SHOW_WHATSAPP && (
                 <a href={whatsappLink(SITE)} target="_blank" rel="noopener" className="flex items-center gap-3 rounded-lg bg-black px-4 py-2.5 text-white hover:bg-[#222]">
                   <MessageCircle className="h-7 w-7 text-[#25d366]" />
                   <span className="leading-tight"><span className="block text-[10px] uppercase text-white/80">Chat with us on</span><span className="text-lg font-semibold">WhatsApp</span></span>
                 </a>
+                )}
               </div>
             </div>
           </div>
