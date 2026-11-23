@@ -98,11 +98,11 @@ Use the **Starter** plan (always on) — the free plan sleeps after 15 minutes, 
 ## Deploy on Hostinger VPS (Ubuntu)
 
 This app shares one VPS with Life of KittuKun. The full step-by-step guide and scripts are in the
-`hostinger-deploy` folder next to this project (`../hostinger-deploy/README.md`): Caddy (automatic HTTPS for
+`hostinger-deploy` folder inside the Life of KittuKun project (`../youtber porftolio and blog /hostinger-deploy/README.md`, git-ignored there): Caddy (automatic HTTPS for
 myloanwala.com + besthomeloanindia.com), PM2 (`ecosystem.config.js`, port 3000) and one-command releases.
 
 ```bash
-cd ../hostinger-deploy
+cd "../youtber porftolio and blog /hostinger-deploy"
 ./deploy.sh env myloanwala   # upload .env.production
 ./deploy.sh myloanwala       # build on the server and switch over (old version stays live if it fails)
 ```
