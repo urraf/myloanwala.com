@@ -97,45 +97,15 @@ Use the **Starter** plan (always on) — the free plan sleeps after 15 minutes, 
 
 ## Deploy on Hostinger VPS (Ubuntu)
 
-```bash
-# 1. Install Node 20+ and PM2 (one time)
-curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
-sudo apt install -y nodejs nginx
-sudo npm i -g pm2
-
-# 2. Upload the project (git clone or upload the folder), then:
-cd myloanwala
-npm ci
-nano .env.production # paste your production settings (see .env.example)
-npm run seed         # only for a brand-new database
-npm run build
-pm2 start ecosystem.config.js
-pm2 save && pm2 startup   # auto-start after reboot
-```
-
-**3. Nginx** (`/etc/nginx/sites-available/myloanwala`):
-
-```nginx
-server {
-    server_name myloanwala.com www.myloanwala.com;
-    client_max_body_size 10M;
-    location / {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
+This app shares one VPS with Life of KittuKun. The full step-by-step guide and scripts are in the
+`hostinger-deploy` folder next to this project (`../hostinger-deploy/README.md`): Caddy (automatic HTTPS for
+myloanwala.com + besthomeloanindia.com), PM2 (`ecosystem.config.js`, port 3000) and one-command releases.
 
 ```bash
-sudo ln -s /etc/nginx/sites-available/myloanwala /etc/nginx/sites-enabled/
-sudo nginx -t && sudo systemctl reload nginx
-sudo apt install -y certbot python3-certbot-nginx && sudo certbot --nginx -d myloanwala.com -d www.myloanwala.com
+cd ../hostinger-deploy
+./deploy.sh env myloanwala   # upload .env.production
+./deploy.sh myloanwala       # build on the server and switch over (old version stays live if it fails)
 ```
-
-**Updating later:** `git pull && npm ci && npm run build && pm2 restart myloanwala`
 
 **Logs:** `pm2 logs myloanwala`. If SMTP isn't set up yet, the admin password-reset OTP is printed here.
 
