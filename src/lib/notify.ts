@@ -1,15 +1,19 @@
 import { sendMail, smtpConfigured } from "./mail";
-import { SITE, formatINR } from "./site";
+import { SITE, brandForHost, formatINR } from "./site";
 
-/** Email address that receives new-lead alerts: LEAD_NOTIFY_EMAIL, else the business email shown on the website. */
-export const leadAlertEmail = () => process.env.LEAD_NOTIFY_EMAIL || SITE.email;
+/**
+ * Who receives alerts: LEAD_NOTIFY_EMAIL if set (overrides everything), otherwise the owner email
+ * of the website the lead came from — myloanwala.com leads → MyLoanWala email, besthomeloanindia.com → Best Home Loan email.
+ */
+export const leadAlertEmail = (site?: string) => process.env.LEAD_NOTIFY_EMAIL || brandForHost(site).email;
 const to = leadAlertEmail;
 const row = (k: string, v: unknown) =>
   v ? `<tr><td style="padding:6px 12px;color:#6b7280">${k}</td><td style="padding:6px 12px;font-weight:600">${String(v).replace(/</g, "&lt;")}</td></tr>` : "";
 
 /** Fire-and-forget email to the business owner when a new lead arrives. Never throws. */
 export function notifyNewLead(lead: { name: string; phone: string; loanType: string; city?: string; amount?: number; monthlyIncome?: number; employment?: string; email?: string; site?: string }, source: string) {
-  if (!to() || !smtpConfigured()) return;
+  const email = to(lead.site);
+  if (!email || !smtpConfigured()) return;
   const html = `<div style="font-family:Arial,sans-serif;max-width:520px">
     <h2 style="color:#0066ff;margin:0 0 4px">New ${lead.loanType} lead</h2>
     <p style="margin:0 0 12px;color:#6b7280">Source: ${source}</p>
@@ -19,7 +23,7 @@ export function notifyNewLead(lead: { name: string; phone: string; loanType: str
     </table>
     <p><a href="${SITE.url}/admin/leads" style="background:#0066ff;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;display:inline-block">Open Leads Dashboard</a></p>
   </div>`;
-  sendMail(to(), `New lead: ${lead.name} — ${lead.loanType}`, html).catch((e) => console.error("[notify] lead email failed:", e.message));
+  sendMail(email, `New lead: ${lead.name} — ${lead.loanType}`, html).catch((e) => console.error("[notify] lead email failed:", e.message));
 }
 
 export function notifyNewPartner(p: { name: string; company: string; type: string; phone: string; email: string; city?: string }) {
